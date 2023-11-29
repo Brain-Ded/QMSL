@@ -1,3 +1,5 @@
+using NUnit.Framework;
+
 namespace QMSL_UTestAuth
 {
     public class Tests
