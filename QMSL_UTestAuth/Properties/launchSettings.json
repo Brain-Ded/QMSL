@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "QMSL_UTestAuth": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:53547;http://localhost:53548"
+    }
+  }
+}
