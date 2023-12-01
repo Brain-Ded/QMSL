@@ -25,10 +25,14 @@ namespace QMSL_UTestGeneral
         }
 
         [Test]
-        [TestCase(-1, 1)]
-        [TestCase(1, -1)]
-        public void CreatePoll_InvalidNameOrQuestionListIsEmptyOrNull_ThrowsArgumentNullException(string name, List<GeneralQuestion> questions)
+        [TestCase(null)]
+        [TestCase("TestName")]
+        public void CreatePoll_InvalidNameOrQuestionListIsEmptyOrNull_ThrowsArgumentNullException(string name)
         {
+            List<GeneralQuestion> questions = null;
+            if(name == null)
+                questions = new List<GeneralQuestion>() { new GeneralQuestion() };
+
             Assert.Throws(Is.TypeOf<ArgumentNullException>()
                 .And.Property("Questions").Not.Contain(_GeneralQuestion),
                 () => _PollsService.CreatePoll(name, questions));
@@ -44,18 +48,24 @@ namespace QMSL_UTestGeneral
         }
 
         [Test]
-        [TestCase(-1, 1)]
-        [TestCase(1, -1)]
-        public void EditPoll_InvalidIdOrEditedPollIsNull_ThrowsArgumentNullException(int id, GeneralPoll poll)
+        [TestCase(-1)]
+        [TestCase(1)]
+        public void EditPoll_InvalidIdOrEditedPollIsNull_ThrowsArgumentNullException(int id)
         {
+            GeneralPoll poll = null;
+            if (id == -1)
+                poll = new GeneralPoll();
+
             Assert.Throws(Is.TypeOf<ArgumentNullException>(),
                 () => _PollsService.EditPoll(id, poll));
         }
 
         [Test]
-        public void DeletePoll_ValidId_DeletesPoll(GeneralPoll poll)
+        public void DeletePoll_ValidId_DeletesPoll()
         {
             int id = 1;
+            GeneralPoll poll = new GeneralPoll() { Id = id };
+
             _PollsService.DeletePoll(id);
             Assert.That(poll.Id, Is.EqualTo(id));
         }
