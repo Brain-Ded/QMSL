@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QMSL_UTestAuth", "QMSL_UTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QMSL_UTestCommunication", "QMSL_UTestCommunication\QMSL_UTestCommunication.csproj", "{70CB2554-5CC7-46B9-B294-ED3AFB3061EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QMSL_UTestGeneral", "QMSL_UTestGeneral\QMSL_UTestGeneral.csproj", "{4990B46C-EC37-4E39-8487-68C5496F0D29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{70CB2554-5CC7-46B9-B294-ED3AFB3061EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70CB2554-5CC7-46B9-B294-ED3AFB3061EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70CB2554-5CC7-46B9-B294-ED3AFB3061EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4990B46C-EC37-4E39-8487-68C5496F0D29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4990B46C-EC37-4E39-8487-68C5496F0D29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4990B46C-EC37-4E39-8487-68C5496F0D29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4990B46C-EC37-4E39-8487-68C5496F0D29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
