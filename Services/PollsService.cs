@@ -8,12 +8,15 @@ namespace QMSL.Services
     public class PollsService
     {
         //Nazar
-        public GeneralPoll CreatePoll(string name, List<GeneralQuestion> questions) 
+        public GeneralPoll CreatePoll(string name, List<GeneralQuestion> questions)
         {
-            return new GeneralPoll() { Name = name, Questions = questions};
+            if (!string.IsNullOrEmpty(name) && questions?.Count > 0)
+                return new GeneralPoll() { Name = name, Questions = questions };
+
+            throw new ArgumentNullException();
         }
         //Nazar
-        public GeneralPoll EditPoll(int id, GeneralPoll edited) 
+        public GeneralPoll EditPoll(int id, GeneralPoll edited)
         {
             throw new NotImplementedException();
         }
