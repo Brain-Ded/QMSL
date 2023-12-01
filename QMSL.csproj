@@ -8,9 +8,17 @@
 
   <ItemGroup>
     <Compile Remove="QMSL_UTestAuth\**" />
+    <Compile Remove="QMSL_UTestCommunication\**" />
+    <Compile Remove="QMSL_UTestPolls\**" />
     <Content Remove="QMSL_UTestAuth\**" />
+    <Content Remove="QMSL_UTestCommunication\**" />
+    <Content Remove="QMSL_UTestPolls\**" />
     <EmbeddedResource Remove="QMSL_UTestAuth\**" />
+    <EmbeddedResource Remove="QMSL_UTestCommunication\**" />
+    <EmbeddedResource Remove="QMSL_UTestPolls\**" />
     <None Remove="QMSL_UTestAuth\**" />
+    <None Remove="QMSL_UTestCommunication\**" />
+    <None Remove="QMSL_UTestPolls\**" />
   </ItemGroup>
 
   <ItemGroup>
