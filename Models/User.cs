@@ -12,6 +12,5 @@
         public string Sex { get; set; }
         public string PhoneNumber { get; set; }
 
-
     }
 }
