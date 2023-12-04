@@ -37,7 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\" />
     <Folder Include="obj\Debug\net6.0\NewFolder\" />
   </ItemGroup>
 
