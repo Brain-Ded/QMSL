@@ -1,7 +1,15 @@
-﻿namespace QMSL.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace QMSL.Models
 {
-    public class EditableQuestion : GeneralQuestion
+    public class EditableQuestion
     {
-        public int? ChoosenAnswer;
+        [Key]
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public List<string> Answers { get; set; }
+        public int? ChoosenAnswer { get; set; }
+        public int EditablePollId { get; set; }
+        public EditablePoll EditablePoll { get; set; } = null!;
     }
 }
