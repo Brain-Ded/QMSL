@@ -66,17 +66,17 @@ namespace QMSL.Controllers
             && x.Password.SequenceEqual(VerifyPasswordHash(Password)));
             string userType = "";
             int countFind = 0;
+
             if (await _dataContext.Patients.AnyAsync(x => x.Email.Equals(Email)))
             {
                 userType = "Patient";
                 countFind++;
-            }
-
-            if (await _dataContext.Doctors.AnyAsync(x => x.Email.Equals(Email)))
+            }else if (await _dataContext.Doctors.AnyAsync(x => x.Email.Equals(Email)))
             {
                 userType = "Doctor";
                 countFind++;
             }
+
             if(countFind == 2)
             {
                 return BadRequest("There are 2 users with this Email, contact support please");
