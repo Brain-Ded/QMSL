@@ -7,13 +7,13 @@ namespace QMSL.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class test : IMigrationMetadata
+    public sealed partial class PasswordHash : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(test));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(PasswordHash));
         
         string IMigrationMetadata.Id
         {
-            get { return "202312062052547_test"; }
+            get { return "202312071314503_PasswordHash"; }
         }
         
         string IMigrationMetadata.Source

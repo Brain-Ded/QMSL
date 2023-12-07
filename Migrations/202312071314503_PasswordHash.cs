@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class test : DbMigration
+    public partial class PasswordHash : DbMigration
     {
         public override void Up()
         {
@@ -43,7 +43,7 @@
                         Surname = c.String(),
                         Fathername = c.String(),
                         Email = c.String(),
-                        Password = c.String(),
+                        Password = c.Binary(),
                         Age = c.Int(nullable: false),
                         Sex = c.String(),
                         PhoneNumber = c.String(),
@@ -59,7 +59,7 @@
                         Surname = c.String(),
                         Fathername = c.String(),
                         Email = c.String(),
-                        Password = c.String(),
+                        Password = c.Binary(),
                         Age = c.Int(nullable: false),
                         Sex = c.String(),
                         PhoneNumber = c.String(),
