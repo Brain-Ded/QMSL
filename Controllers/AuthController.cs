@@ -2,17 +2,19 @@
 using Microsoft.IdentityModel.Tokens;
 using QMSL.Dtos;
 using QMSL.Models;
-using System.Data.Entity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace QMSL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController : Controller
     {
         private readonly DataContext _dataContext;
         private readonly IConfiguration _config;

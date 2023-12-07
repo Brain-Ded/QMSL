@@ -1,11 +1,12 @@
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using QMSL.Models;
+
 
 namespace QMSL
 {
     public class DataContext : DbContext
     {
-        public DataContext() { }
+        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
