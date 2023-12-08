@@ -2,12 +2,9 @@
 
 namespace QMSL.Services
 {
-    //Katya
-    //Nazar
-    //Maxim
     public class PollsService
     {
-        //Nazar
+        //Vlad
         public GeneralPoll CreatePoll(string name, List<GeneralQuestion> questions)
         {
             if (!string.IsNullOrEmpty(name) && questions?.Count > 0)
@@ -15,24 +12,24 @@ namespace QMSL.Services
 
             throw new ArgumentNullException();
         }
-        //Nazar
+        //Vlad
         public GeneralPoll EditPoll(int id, GeneralPoll edited)
         {
             throw new NotImplementedException();
         }
-        //Nazar
+        //Vlad
         public void DeletePoll(int id) { throw new NotImplementedException(); }
-        //Katya
+        //Nazar
         public void AssignPoll(int PatientId, int PollId) { throw new NotImplementedException(); }
-        //Katya
+        //Nazar
         public void UnassignPoll(int PatientId, int PollId) { throw new NotImplementedException(); }
-        //Katya
+        //Nazar
         public void CommentPoll(int PollId, Comment comment) { throw new NotImplementedException(); }
-        //Maxim
+        //Vlad
         public EditablePoll GetEditCopy(int PollId) { throw new NotImplementedException(); }
-        //Maxim
+        //Vlad
         public EditableQuestion GetEditQuestion(int QuestionId) { throw new NotImplementedException(); }
-        //Maxim
+        //Nazar
         public void PassPoll(int PollId) { throw new NotImplementedException(); }
     }
 }

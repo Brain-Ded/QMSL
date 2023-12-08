@@ -7,7 +7,7 @@ namespace QMSL.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<string> Answers { get; set; }
+        public List<Answer> Answers { get; set; }
         public int GeneralPollId { get; set; }
         public GeneralPoll GeneralPoll { get; set; } = null!;
     }
