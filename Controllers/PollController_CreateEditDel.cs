@@ -75,23 +75,28 @@ namespace QMSL.Controllers
 
             generalPoll.Questions = generalQuestions;
             await _dataContext.SaveChangesAsync();
+
             generalQuestions = _dataContext.GeneralPolls.First(x => x.Name.Equals(generalPoll.Name)).Questions;
 
             for(int i=0; i<generalQuestions.Count; ++i)
             {
-                for(int j=0; j<poll.Questions.Count; ++j)
+                generalQuestions[i].Answers = new List<Answer>();
+                for (int j=0; j<poll.Questions[i].Answers.Count; ++j)
                 {
+                    
                     generalQuestions[i].Answers.Add(new Answer()
                     {
-
+                        GeneralQuestionId = generalQuestions[i].Id,
+                        Text = poll.Questions[i].Answers[j].Text,
                     });
                 }
             }
 
             
+            await _dataContext.SaveChangesAsync();
+            generalPoll = _dataContext.GeneralPolls.First(x => x.Name.Equals(generalPoll.Name));
 
-
-            return Ok(poll);
+            return Ok(generalPoll);
         }
     }
 }
