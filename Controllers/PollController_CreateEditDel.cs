@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Azure.Core;
+using QMSL.Services;
 
 namespace QMSL.Controllers
 {
@@ -37,6 +38,12 @@ namespace QMSL.Controllers
             {
                 return BadRequest("Doctor with this email does not exist");
             }
+
+            foreach(GeneralQuestionDto question in poll.Questions)
+            {
+                if(AuthVerifier.LoginVerification(question.Name))
+            }
+
 
 
             return Ok(poll);

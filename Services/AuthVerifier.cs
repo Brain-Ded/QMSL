@@ -3,6 +3,10 @@
     //Vlad
     public static class AuthVerifier
     {
+        public static bool NameVerification(string Name)
+        {
+            return CheckForSpecialSymbolsE(Name);
+        }
         public static bool LoginVerification(string Email, string Password)
         {
             return (CheckForSpecialSymbolsE(Email) && CheckForSpecialSymbolsP(Password));
