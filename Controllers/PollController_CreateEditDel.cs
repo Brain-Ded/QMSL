@@ -97,5 +97,44 @@ namespace QMSL.Controllers
 
             return Ok(generalPoll);
         }
+
+        [HttpPost("EditPoll")]
+        public async Task<ActionResult<string>> EditPoll(GeneralPoll poll)
+        {
+            GeneralPoll generalPoll = await _dataContext.GeneralPolls.FindAsync(poll.Id);
+
+            generalPoll.Name = poll.Name;
+            generalPoll.Questions = poll.Questions;
+
+
+            await _dataContext.SaveChangesAsync();
+
+            generalPoll = _dataContext.GeneralPolls.First(x => x.Name.Equals(generalPoll.Name));
+
+            return Ok(generalPoll);
+        }
+
+        [HttpPost("DeletePoll")]
+        public async Task<ActionResult<string>> DeletePoll(GeneralPoll poll)
+        {
+            _dataContext.GeneralPolls.Remove(poll);
+
+            await _dataContext.SaveChangesAsync();
+
+            return Ok(_dataContext.GeneralPolls);
+        }
+
+        [HttpGet("GetDoctorPolls")]
+        public async Task<ActionResult<string>> GetDoctorPolls(int doctorId)
+        {
+            
+            return Ok(_dataContext.GeneralPolls.Include("Questions.Answers").Where(x => x.DoctorId == doctorId));
+        }
+
+        [HttpGet("GetDoctorPollAt")]
+        public async Task<ActionResult<string>> GetDoctorPollAt(int doctorId, int pollId)
+        {
+            return Ok(_dataContext.GeneralPolls.Include("Questions.Answers").Where(x => x.DoctorId == doctorId && x.Id == pollId));
+        }
     }
 }
