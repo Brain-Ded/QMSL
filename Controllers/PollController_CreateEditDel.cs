@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Azure.Core;
 
 namespace QMSL.Controllers
 {
@@ -32,7 +33,10 @@ namespace QMSL.Controllers
             {
                 return BadRequest("Poll with this name already exist");
             }
-
+            if (await _dataContext.Doctors.AnyAsync(x => x.Email.Equals(DoctorEmail)))
+            {
+                return BadRequest("Doctor with this email does not exist");
+            }
 
 
             return Ok(poll);
