@@ -21,7 +21,7 @@ namespace QMSL.Controllers
             _pollsService = new PollsService();
         }
 
-        [HttpPost]
+        [HttpPost("Assign")]
         public async Task<ActionResult<string>> AssignPoll(PollDto poll, string patientEmail)
         {
             if(!await _dataContext.Patients.AnyAsync(x => x.Email.Equals(patientEmail)))
@@ -41,7 +41,7 @@ namespace QMSL.Controllers
             return Ok(patient);
         }
 
-        [HttpPost]
+        [HttpPost("Unassign")]
         public async Task<ActionResult<string>> UnassignPoll(PollDto poll, string patientEmail)
         {
             if (!await _dataContext.Patients.AnyAsync(x => x.Email.Equals(patientEmail)))
