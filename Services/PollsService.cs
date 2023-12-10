@@ -68,9 +68,12 @@ namespace QMSL.Services
         //Vlad
         public EditableQuestion GetEditQuestion(int QuestionId) { throw new NotImplementedException(); }
         //Nazar
-        public void PassPoll(int PollId) 
-        { 
-            throw new NotImplementedException(); 
+        public EditablePoll PassPoll(EditablePoll poll) 
+        {
+            if (poll == null) throw new ArgumentNullException();
+
+            poll.IsPassed = true;
+            return poll;
         }
     }
 }

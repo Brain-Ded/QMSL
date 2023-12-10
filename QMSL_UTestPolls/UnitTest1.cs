@@ -59,20 +59,21 @@ namespace QMSL_UTestPolls
         }
         public void PassPoll_PositiveTest()
         {
-            int validPollId = 1; 
+            int validPollId = 1;
+            EditablePoll poll = new EditablePoll() { Id = validPollId };
             Assert.DoesNotThrow(() =>
             {
-                pollInstance.PassPoll(validPollId);
+                pollInstance.PassPoll(poll);
             });
         }
 
         [Test]
         public void PassPoll_NegativeTest()
         {
-            int invalidPollId = -1; 
+            EditablePoll poll = null;
             Assert.Throws<NotImplementedException>(() =>
             {
-                pollInstance.PassPoll(invalidPollId);
+                pollInstance.PassPoll(poll);
             });
         }
     }
