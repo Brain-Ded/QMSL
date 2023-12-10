@@ -34,10 +34,12 @@ namespace QMSL.Controllers
             {
                 return BadRequest("Poll with this name already exist");
             }
-            if (await _dataContext.Doctors.AnyAsync(x => x.Email.Equals(DoctorEmail)))
+            if (!await _dataContext.Doctors.AnyAsync(x => x.Email.Equals(DoctorEmail)))
             {
                 return BadRequest("Doctor with this email does not exist");
             }
+
+            Doctor doctor = await _dataContext.Doctors.FirstAsync(x => x.Email.Equals(DoctorEmail));
 
             foreach(GeneralQuestionDto question in poll.Questions)
             {
@@ -47,6 +49,43 @@ namespace QMSL.Controllers
                 }
             }
 
+            GeneralPoll generalPoll = new GeneralPoll()
+            {
+                Name = poll.Name,
+                Doctor = doctor,
+                DoctorId = doctor.Id
+            };
+
+            _dataContext.GeneralPolls.Add(generalPoll);
+            await _dataContext.SaveChangesAsync();
+
+            generalPoll = _dataContext.GeneralPolls.First(x => x.Name.Equals(generalPoll.Name));
+
+            List<GeneralQuestion> generalQuestions = new List<GeneralQuestion>();
+
+            foreach (GeneralQuestionDto question in poll.Questions)
+            {
+                generalQuestions.Add(new GeneralQuestion()
+                {
+                    Name = question.Name,
+                    GeneralPoll = generalPoll,
+                    GeneralPollId = generalPoll.Id,
+                });
+            }
+
+            generalPoll.Questions = generalQuestions;
+            await _dataContext.SaveChangesAsync();
+            generalQuestions = _dataContext.GeneralPolls.First(x => x.Name.Equals(generalPoll.Name)).Questions;
+
+            
+
+            foreach(GeneralQuestion question in generalQuestions)
+            {
+                foreach(AnswerDto answer in question.Answers)
+                {
+                    
+                }
+            }
 
 
             return Ok(poll);
