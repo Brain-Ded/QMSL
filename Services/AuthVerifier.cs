@@ -13,7 +13,7 @@
             if(FatherName != null)
             return (CheckForSpecialSymbolsE(Email) && CheckForSpecialSymbolsP(Password) 
                 && (Sex.Equals("Male") || Sex.Equals("Female")) && PhoneNumber.StartsWith("+")
-                && CheckForSpecialSymbolsE(Name) && CheckForSpecialSymbolsE(Surname) && CheckForSpecialSymbolsE(FatherName));
+                && CheckForSpecialSymbolsE(Name) && CheckForSpecialSymbolsE(Surname) && CheckForSpecialSymbolsE(FatherName) && Age >= 0);
         else 
                 return (CheckForSpecialSymbolsE(Email) && CheckForSpecialSymbolsP(Password)
                 && (Sex.Equals("Male") || Sex.Equals("Female")) && PhoneNumber.StartsWith("+")
@@ -22,7 +22,7 @@
 
         private static bool CheckForSpecialSymbolsE(string Email) 
         {
-            return !Email.Contains("@") || Email.Any(x => (x.Equals("\\") 
+            return Email.Contains("@") && !Email.Any(x => (x.Equals("\\") 
             || x.Equals(",") || x.Equals("?") || x.Equals(" ")));
         }
         private static bool CheckForSpecialSymbolsP(string Password) 
