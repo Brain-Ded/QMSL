@@ -41,7 +41,10 @@ namespace QMSL.Controllers
 
             foreach(GeneralQuestionDto question in poll.Questions)
             {
-                if(AuthVerifier.LoginVerification(question.Name))
+                if (AuthVerifier.NameVerification(question.Name))
+                {
+                    return BadRequest("Bad name");
+                }
             }
 
 
