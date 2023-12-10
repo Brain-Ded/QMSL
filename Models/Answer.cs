@@ -8,6 +8,6 @@ public class Answer
     public string Text { get; set; }
     public int GeneralQuestionId { get; set; }
     public GeneralQuestion GeneralQuestion { get; set; } = null!;
-    public int EditableQuestionId { get; set; }
+    public int? EditableQuestionId { get; set; }
     public EditableQuestion EditableQuestion { get; set; } = null!;
 }

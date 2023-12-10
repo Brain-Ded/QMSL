@@ -17,11 +17,11 @@
             if(FatherName != null && !FatherName.Equals(""))
             return (CheckForSpecialSymbolsE(Email) && CheckForSpecialSymbolsP(Password) 
                 && (Sex.Equals("Male") || Sex.Equals("Female")) && PhoneNumber.StartsWith("+")
-                && CheckForSpecialSymbolsE(Name) && CheckForSpecialSymbolsE(Surname) && CheckForSpecialSymbolsE(FatherName) && Age >= 0);
+                && CheckForSpecialSymbolsP(Name) && CheckForSpecialSymbolsP(Surname) && CheckForSpecialSymbolsP(FatherName) && Age >= 0);
         else 
                 return (CheckForSpecialSymbolsE(Email) && CheckForSpecialSymbolsP(Password)
                 && (Sex.Equals("Male") || Sex.Equals("Female")) && PhoneNumber.StartsWith("+")
-                && CheckForSpecialSymbolsE(Name) && CheckForSpecialSymbolsE(Surname));
+                && CheckForSpecialSymbolsP(Name) && CheckForSpecialSymbolsE(Surname));
         }
 
         private static bool CheckForSpecialSymbolsE(string Email) 

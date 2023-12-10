@@ -27,7 +27,7 @@ namespace QMSL.Controllers
             _config = configuration;
         }
 
-        [HttpPost]
+        [HttpPost("CreatePoll")]
         public async Task<ActionResult<string>> CreatePoll(PollDto poll, string DoctorEmail)
         {
             if(await _dataContext.GeneralPolls.AnyAsync(x => x.Name.Equals(poll.Name)))
@@ -77,15 +77,18 @@ namespace QMSL.Controllers
             await _dataContext.SaveChangesAsync();
             generalQuestions = _dataContext.GeneralPolls.First(x => x.Name.Equals(generalPoll.Name)).Questions;
 
-            
+            for(int i=0; i<generalQuestions.Count; ++i)
+            {
+                for(int j=0; j<poll.Questions.Count; ++j)
+                {
+                    generalQuestions[i].Answers.Add(new Answer()
+                    {
 
-            //foreach(GeneralQuestion question in generalQuestions)
-            //{
-            //    foreach(AnswerDto answer in question.Answers)
-            //    {
-                    
-            //    }
-            //}
+                    });
+                }
+            }
+
+            
 
 
             return Ok(poll);
