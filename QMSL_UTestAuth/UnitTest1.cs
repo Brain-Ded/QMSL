@@ -5,11 +5,9 @@ namespace QMSL_UTestAuth
 {
     public class Tests
     {
-        AuthVerifier handler;
         [SetUp]
         public void Setup()
         {
-            handler = new AuthVerifier();
         }
 
         [Test]

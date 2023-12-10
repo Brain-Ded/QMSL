@@ -26,11 +26,16 @@ namespace QMSL.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<string>> CreatePoll(GeneralQuestionDto poll, string DoctorEmail)
+        public async Task<ActionResult<string>> CreatePoll(PollDto poll, string DoctorEmail)
         {
+            if(await _dataContext.GeneralPolls.AnyAsync(x => x.Name.Equals(poll.Name)))
+            {
+                return BadRequest("Poll with this name already exist");
+            }
 
 
-            return Ok();
+
+            return Ok(poll);
         }
     }
 }
