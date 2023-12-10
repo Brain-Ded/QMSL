@@ -62,9 +62,29 @@ namespace QMSL.Controllers
                 _dataContext.Patients.Add(user);
 
                 await _dataContext.SaveChangesAsync();
+                return Ok(user);
+            }
+            else
+            {
+                var user = new Doctor()
+                {
+                    Name = request.Name,
+                    Surname = request.Surname,
+                    Fathername = request.Fathername,
+                    PhoneNumber = request.PhoneNumber,
+                    Sex = request.Sex,
+                    Age = request.Age,
+                    Email = request.Email,
+                    Password = passwordHash
+                };
+
+                _dataContext.Doctors.Add(user);
+
+                await _dataContext.SaveChangesAsync();
+                return Ok(user);
             }
 
-            return Ok();
+            
         }
         [HttpPost("LogIn")]
         public async Task<ActionResult<string>> Login(string Email, string Password)
