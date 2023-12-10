@@ -79,13 +79,13 @@ namespace QMSL.Controllers
 
             
 
-            foreach(GeneralQuestion question in generalQuestions)
-            {
-                foreach(AnswerDto answer in question.Answers)
-                {
+            //foreach(GeneralQuestion question in generalQuestions)
+            //{
+            //    foreach(AnswerDto answer in question.Answers)
+            //    {
                     
-                }
-            }
+            //    }
+            //}
 
 
             return Ok(poll);
