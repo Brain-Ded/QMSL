@@ -10,7 +10,7 @@
         public static bool RegisterVerification(string Email, string Password, int Age, string Sex, string PhoneNumber, 
             string Name, string Surname, string? FatherName) 
         {
-            if(FatherName != null)
+            if(FatherName != null && !FatherName.Equals(""))
             return (CheckForSpecialSymbolsE(Email) && CheckForSpecialSymbolsP(Password) 
                 && (Sex.Equals("Male") || Sex.Equals("Female")) && PhoneNumber.StartsWith("+")
                 && CheckForSpecialSymbolsE(Name) && CheckForSpecialSymbolsE(Surname) && CheckForSpecialSymbolsE(FatherName) && Age >= 0);

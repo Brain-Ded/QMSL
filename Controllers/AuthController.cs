@@ -9,6 +9,8 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using QMSL.Services;
+using Azure.Core;
 
 namespace QMSL.Controllers
 {
@@ -37,6 +39,10 @@ namespace QMSL.Controllers
             {
                 return BadRequest("Doctor with this email aldready exists");
             }
+
+            if (!AuthVerifier.RegisterVerification(request.Email, request.Password, request.Age,
+                request.Sex, request.PhoneNumber, request.Name, request.Surname, request.Fathername))
+                return BadRequest("Some fields were wrongly typed");
 
             CreatePasswordHash(request.Password, out byte[] passwordHash);
             if (type)
@@ -87,6 +93,8 @@ namespace QMSL.Controllers
             {
                 return BadRequest("Either Email or Password is incorrect");
             }
+            if (!AuthVerifier.LoginVerification(Email, Password))
+                return BadRequest("Some fields were wrongly typed");
 
             string token = CreateToken(user, userType);
 
