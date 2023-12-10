@@ -13,7 +13,7 @@ namespace QMSL.Models
         public CommentTypes type { get; set; }
         public DateTime CommentedAt { get; set; }
         public int EditablePollId { get; set; }
-        public EditablePoll EditablePoll { get; set; } = null!;
+        //public EditablePoll EditablePoll { get; set; } = null!;
     }
 
     public partial class Comment

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QMSL;
 
@@ -11,9 +12,11 @@ using QMSL;
 namespace QMSL.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231210154801_test5")]
+    partial class test5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -277,13 +280,17 @@ namespace QMSL.Migrations
 
             modelBuilder.Entity("Answer", b =>
                 {
-                    b.HasOne("QMSL.Models.EditableQuestion", null)
+                    b.HasOne("QMSL.Models.EditableQuestion", "EditableQuestion")
                         .WithMany("Answers")
                         .HasForeignKey("EditableQuestionId");
 
-                    b.HasOne("QMSL.Models.GeneralQuestion", null)
+                    b.HasOne("QMSL.Models.GeneralQuestion", "GeneralQuestion")
                         .WithMany("Answers")
                         .HasForeignKey("GeneralQuestionId");
+
+                    b.Navigation("EditableQuestion");
+
+                    b.Navigation("GeneralQuestion");
                 });
 
             modelBuilder.Entity("DoctorPatient", b =>

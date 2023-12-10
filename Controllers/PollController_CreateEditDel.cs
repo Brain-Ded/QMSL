@@ -52,7 +52,7 @@ namespace QMSL.Controllers
             GeneralPoll generalPoll = new GeneralPoll()
             {
                 Name = poll.Name,
-                Doctor = doctor,
+                //Doctor = doctor,
                 DoctorId = doctor.Id
             };
 
@@ -68,7 +68,6 @@ namespace QMSL.Controllers
                 generalQuestions.Add(new GeneralQuestion()
                 {
                     Name = question.Name,
-                    GeneralPoll = generalPoll,
                     GeneralPollId = generalPoll.Id,
                 });
             }

@@ -10,6 +10,6 @@ namespace QMSL.Models
         public List<Answer> Answers { get; set; }
         public int? ChoosenAnswer { get; set; }
         public int EditablePollId { get; set; }
-        public EditablePoll EditablePoll { get; set; } = null!;
+        //public EditablePoll EditablePoll { get; set; } = null!;
     }
 }
