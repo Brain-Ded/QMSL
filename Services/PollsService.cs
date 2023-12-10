@@ -20,16 +20,57 @@ namespace QMSL.Services
         //Vlad
         public void DeletePoll(int id) { throw new NotImplementedException(); }
         //Nazar
-        public void AssignPoll(int PatientId, int PollId) { throw new NotImplementedException(); }
+        public Patient AssignPoll(Patient patient, EditablePoll poll) 
+        {
+            if(patient == null || poll == null)
+                throw new ArgumentNullException();
+
+            if (patient.Polls == null)
+                patient.Polls = new List<EditablePoll>();
+
+            patient.Polls.Add(poll);
+            return patient;
+        }
         //Nazar
-        public void UnassignPoll(int PatientId, int PollId) { throw new NotImplementedException(); }
+        public Patient UnassignPoll(Patient patient, int pollId) 
+        {
+            if (patient == null || patient.Polls == null)
+                throw new ArgumentNullException();
+
+            var poll = patient.Polls.FirstOrDefault(p => p.Id == pollId);
+
+            if (poll != null)
+            {
+                patient.Polls.Remove(poll);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            return patient;
+        }
         //Nazar
-        public void CommentPoll(int PollId, Comment comment) { throw new NotImplementedException(); }
+        public EditablePoll CommentPoll(EditablePoll poll, Comment comment) 
+        { 
+            if(poll == null || comment == null)
+                throw new ArgumentNullException();
+
+            if(poll.Comments == null)
+                poll.Comments = new List<Comment>();
+
+            poll.Comments.Add(comment);
+
+            return poll;
+        }
         //Vlad
         public EditablePoll GetEditCopy(int PollId) { throw new NotImplementedException(); }
         //Vlad
         public EditableQuestion GetEditQuestion(int QuestionId) { throw new NotImplementedException(); }
         //Nazar
-        public void PassPoll(int PollId) { throw new NotImplementedException(); }
+        public void PassPoll(int PollId) 
+        { 
+            throw new NotImplementedException(); 
+        }
     }
 }
