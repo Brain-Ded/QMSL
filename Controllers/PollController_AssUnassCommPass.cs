@@ -31,14 +31,18 @@ namespace QMSL.Controllers
 
             var patient = _dataContext.Patients.First(x => x.Email == patientEmail);
 
-            if ((bool)(patient.Polls?.Any(x => x.Name == poll.Name)))
+            if(patient.Polls != null && patient.Polls.Any(x => x.Name == poll.Name))
             {
                 return BadRequest("Patient with this email already has this poll");
             }
 
-            _pollsService.AssignPoll(patient, _dataContext.GeneralPolls.FirstOrDefault(x => x.Name == poll.Name)?.getEditCopy());
+            var generalPoll = _dataContext.GeneralPolls.First(x => x.Name == poll.Name).getEditCopy();
+            _dataContext.EditablePolls.Add(generalPoll);
 
-            return Ok(patient);
+            _pollsService.AssignPoll(patient, generalPoll);
+            await _dataContext.SaveChangesAsync();
+
+            return Ok();
         }
 
         [HttpPost("Unassign")]
@@ -51,13 +55,14 @@ namespace QMSL.Controllers
 
             var patient = _dataContext.Patients.First(x => x.Email == patientEmail);
 
-            if (!(bool)(patient.Polls?.Any(x => x.Name == poll.Name)))
+            if (patient.Polls == null || !patient.Polls.Any(x => x.Name == poll.Name))
             {
                 return BadRequest("Patient with this email doesn't has this poll");
             }
 
-            var editPoll = patient.Polls.FirstOrDefault(x => x.Name == poll.Name);
+            var editPoll = _dataContext.EditablePolls.FirstOrDefault(x => x.Name == poll.Name);
             _pollsService.UnassignPoll(patient, editPoll.Id);
+            await _dataContext.SaveChangesAsync();
 
             return Ok(patient);
         }
