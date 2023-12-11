@@ -46,7 +46,7 @@ namespace QMSL.Controllers
         {
             return Ok(_dataContext.Doctors.FindAsync(doctorId));
         }
-
+        [HttpGet("GetPatientById")]
         public async Task<ActionResult<string>> GetPatientById(int patientId)
         {
             return Ok(_dataContext.Patients.FindAsync(patientId));
