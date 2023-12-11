@@ -27,6 +27,8 @@ namespace QMSL.Controllers
         {
             _dataContext = dataContext;
             _config = configuration;
+            doctorFactory = new DoctorFactory();
+            patientFactory = new PatientFactory();
         }
 
         [HttpPost("Register")]
