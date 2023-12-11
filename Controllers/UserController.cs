@@ -29,16 +29,16 @@ namespace QMSL.Controllers
         }
 
 
-        [HttpGet("GetPatients")]
-        public async Task<ActionResult<string>> GetDoctorPatients(int doctorId)
+        [HttpGet("GetPatientDoctors")]
+        public async Task<ActionResult<string>> GetDoctorPatients(int patientId)
         {
-            return Ok(_dataContext.Patients.Include("Polls").Include("Doctors").Select(x => x.Doctors.Where(y => y.Id == doctorId)));
+            return Ok(_dataContext.Patients.Where(x => x.Id == patientId).Include("Polls").Include("Doctors"));
         }
 
-        [HttpGet("GetDoctors")]
-        public async Task<ActionResult<string>> GetPatientDoctors(int patientId)
+        [HttpGet("GetDoctorPatients")]
+        public async Task<ActionResult<string>> GetPatientDoctors(int doctorId)
         {
-            return Ok(_dataContext.Doctors.Include("Polls").Include("Patients").Select(x => x.Patients.Where(y => y.Id == patientId)));
+            return Ok(_dataContext.Doctors.Where(x => x.Id == doctorId).Include("Polls").Include("Patients"));
         }
 
         [HttpGet("GetDoctorById")]
