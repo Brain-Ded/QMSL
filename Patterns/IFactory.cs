@@ -4,6 +4,6 @@ namespace QMSL.Dtos
 {
     public interface IFactory
     {
-        User CreateUser();
+        User CreateUser(UserDto newUser);
     }
 }

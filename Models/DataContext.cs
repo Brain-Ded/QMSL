@@ -15,6 +15,7 @@ namespace QMSL
         public DbSet<EditablePoll> EditablePolls { get; set; }
         public DbSet<GeneralQuestion> GeneralQuestions { get; set; }
         public DbSet<EditableQuestion> EditableQuestions { get; set; }
-        public DbSet<Answer> Answers { get; set; }
+        public DbSet<GeneralAnswer> GeneralAnswers { get; set; }
+        public DbSet<EditableAnswer> EditableAnswers { get; set; }
     }
 }
