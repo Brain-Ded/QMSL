@@ -40,5 +40,17 @@ namespace QMSL.Controllers
         {
             return Ok(_dataContext.Doctors.Include("Polls").Include("Patients").Select(x => x.Patients.Where(y => y.Id == patientId)));
         }
+
+        [HttpGet("GetAllPatients")]
+        public async Task<ActionResult<string>> GetAllPatients()
+        {
+            return Ok(_dataContext.Patients.ToList());
+        }
+
+        [HttpGet("GetAllDoctors")]
+        public async Task<ActionResult<string>> GetAllDoctors()
+        {
+            return Ok(_dataContext.Doctors.ToList());
+        }
     }
 }
