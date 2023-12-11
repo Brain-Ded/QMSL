@@ -133,7 +133,7 @@ namespace QMSL.Controllers
             return jwt;
         }
 
-        public void CreatePasswordHash(string password, out byte[] passwordHash)
+        private void CreatePasswordHash(string password, out byte[] passwordHash)
         {
             using (var hmac = new HMACSHA512())
             {
@@ -142,7 +142,7 @@ namespace QMSL.Controllers
             }
         }
 
-        public byte[] VerifyPasswordHash(string password)
+        private byte[] VerifyPasswordHash(string password)
         {
             byte[] passwordHash;
             using (var hmac = new HMACSHA512())
