@@ -21,7 +21,7 @@
         else 
                 return (CheckForSpecialSymbolsE(Email) && CheckForSpecialSymbolsP(Password)
                 && (Sex.Equals("Male") || Sex.Equals("Female")) && PhoneNumber.StartsWith("+")
-                && CheckForSpecialSymbolsP(Name) && CheckForSpecialSymbolsE(Surname));
+                && CheckForSpecialSymbolsP(Name) && CheckForSpecialSymbolsP(Surname));
         }
 
         private static bool CheckForSpecialSymbolsE(string Email) 

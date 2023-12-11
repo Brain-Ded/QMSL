@@ -87,8 +87,10 @@ namespace QMSL.Controllers
             
         }
         [HttpPost("LogIn")]
-        public async Task<ActionResult<string>> Login(string Email, string Password)
+        public async Task<ActionResult<string>> Login(Credentials credentials)
         {
+            var Email = credentials.Email;
+            var Password = credentials.Password;
             CreatePasswordHash(Password, out byte[] passwordHash);
             var user = await _dataContext.Doctors.FirstAsync(x => x.Email.Equals(Email)
             && x.Password.SequenceEqual(VerifyPasswordHash(Password)));
@@ -124,10 +126,10 @@ namespace QMSL.Controllers
         {
             List<Claim> claim = new List<Claim>
             {
-                new Claim(ClaimTypes.SerialNumber, user.Id.ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Name),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, Role)
+                new Claim("id", user.Id.ToString()),
+                new Claim("name", user.Name),
+                new Claim("email", user.Email),
+                new Claim("role", Role)
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));

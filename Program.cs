@@ -24,15 +24,15 @@ namespace QMSL
             var provider = builder.Services.BuildServiceProvider();
             var config = provider.GetRequiredService<IConfiguration>();
 
-            //builder.Services.AddCors(options =>
-            //{
-            //    var frontURL = config.GetValue<string>("frontend_url");
+            builder.Services.AddCors(options =>
+            {
+                //var frontURL = config.GetValue<string>("frontend_url");
 
-            //    options.AddDefaultPolicy(builder =>
-            //    {
-            //        builder.WithOrigins(frontURL).AllowAnyMethod().AllowAnyHeader();
-            //    });
-            //});
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("https://localhost:3000/").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
+                });
+            });
 
             var app = builder.Build();
 
