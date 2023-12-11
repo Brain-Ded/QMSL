@@ -22,7 +22,7 @@ namespace QMSL.Controllers
             _pollsService = new PollsService();
         }
 
-        [HttpPost("Assign")]
+        [HttpPost("Assign Poll to Patient")]
         public async Task<ActionResult<string>> AssignPoll(PollDto poll, string patientEmail)
         {
             if(!await _dataContext.Patients.AnyAsync(x => x.Email.Equals(patientEmail)))
@@ -46,7 +46,7 @@ namespace QMSL.Controllers
             return Ok(patient);
         }
 
-        [HttpPost("Unassign")]
+        [HttpPost("Unassign Poll from Patient")]
         public async Task<ActionResult<string>> UnassignPoll(PollDto poll, string patientEmail)
         {
             if (!await _dataContext.Patients.AnyAsync(x => x.Email.Equals(patientEmail)))
@@ -146,6 +146,27 @@ namespace QMSL.Controllers
             await _dataContext.SaveChangesAsync();
 
             return Ok(dbPoll);
+        }
+
+        [HttpPost("Pass Poll")]
+        public async Task<ActionResult<string>> PassPoll(int pollId)
+        {
+            if(!await _dataContext.EditablePolls.AnyAsync(x => x.Id == pollId))
+            {
+                return BadRequest("Poll with this id is not exists");
+            }
+
+            var poll = _dataContext.EditablePolls.First(x => x.Id == pollId);
+
+            if(poll.IsPassed)
+            {
+                return Ok("Poll is already passed");
+            }
+
+            _pollsService.PassPoll(poll);
+            await _dataContext.SaveChangesAsync();
+
+            return Ok(poll);
         }
     }
 }
