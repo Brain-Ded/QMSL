@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QMSL.Dtos;
+using QMSL.Models;
 using QMSL.Services;
 using System.Runtime.CompilerServices;
 
@@ -124,7 +125,27 @@ namespace QMSL.Controllers
             return Ok(doctor);
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<string>> CommentPoll(PollDto, )
+        [HttpPost("Comment Poll")]
+        public async Task<ActionResult<string>> CommentPoll(int pollId, CommentDto commentDto)
+        {
+            if(!await _dataContext.EditablePolls.AnyAsync(x => x.Id.Equals(pollId)))
+            {
+                return BadRequest("Poll with this id is not exists");
+            }
+
+            if(!await _dataContext.Doctors.AnyAsync(x => x.Id == commentDto.DoctorId))
+            {
+                return BadRequest("Doctor with this id is not exists");
+            }
+
+            var dbPoll = _dataContext.EditablePolls.Include("Comments").First(x => x.Id == pollId);
+            Comment comment = new Comment() { Text = commentDto.Text, DoctorId = commentDto.DoctorId, type = commentDto.Type, CommentedAt = DateTime.Now };
+
+            var commentToAdd = _dataContext.Comments.Add(comment);
+            _pollsService.CommentPoll(dbPoll, commentToAdd.Entity);
+            await _dataContext.SaveChangesAsync();
+
+            return Ok(dbPoll);
+        }
     }
 }
