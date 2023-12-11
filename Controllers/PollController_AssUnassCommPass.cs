@@ -29,20 +29,20 @@ namespace QMSL.Controllers
                 return BadRequest("Patient with this email does not exists");
             }
 
-            var patient = _dataContext.Patients.First(x => x.Email == patientEmail);
+            var patient = _dataContext.Patients.Include("Polls").First(x => x.Email == patientEmail);
 
-            if(patient.Polls != null && patient.Polls.Any(x => x.Name == poll.Name))
+            if(patient.Polls.Any(x => x.Name == poll.Name))
             {
                 return BadRequest("Patient with this email already has this poll");
             }
 
-            var generalPoll = _dataContext.GeneralPolls.First(x => x.Name == poll.Name).getEditCopy();
-            _dataContext.EditablePolls.Add(generalPoll);
+            var editablePoll = _dataContext.GeneralPolls.First(x => x.Name == poll.Name).getEditCopy();
+            _dataContext.EditablePolls.Add(editablePoll);
 
-            _pollsService.AssignPoll(patient, generalPoll);
+            _pollsService.AssignPoll(patient, editablePoll);
             await _dataContext.SaveChangesAsync();
 
-            return Ok();
+            return Ok(patient);
         }
 
         [HttpPost("Unassign")]
@@ -53,9 +53,9 @@ namespace QMSL.Controllers
                 return BadRequest("Patient with this email does not exists");
             }
 
-            var patient = _dataContext.Patients.First(x => x.Email == patientEmail);
+            var patient = _dataContext.Patients.Include("Polls").First(x => x.Email == patientEmail);
 
-            if (patient.Polls == null || !patient.Polls.Any(x => x.Name == poll.Name))
+            if (!patient.Polls.Any(x => x.Name == poll.Name))
             {
                 return BadRequest("Patient with this email doesn't has this poll");
             }
@@ -86,10 +86,7 @@ namespace QMSL.Controllers
                 return BadRequest("This patient already assigned to this doctor");
             }
 
-            var doctor = _dataContext.Doctors.First(x => x.Id == doctorId);
-
-            if (doctor.Patients == null)
-                doctor.Patients = new List<Models.Patient>();
+            var doctor = _dataContext.Doctors.Include("Patients").First(x => x.Id == doctorId);
 
             doctor.Patients.Add(patient);
             await _dataContext.SaveChangesAsync();
