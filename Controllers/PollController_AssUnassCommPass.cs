@@ -67,6 +67,66 @@ namespace QMSL.Controllers
             return Ok(patient);
         }
 
+        [HttpPost("Assign Patient")]
+        public async Task<ActionResult<string>> AssignPatient(int patientId, int doctorId)
+        {
+            if(!await _dataContext.Patients.AnyAsync(x => x.Id.Equals(patientId)))
+            {
+                return BadRequest("Patient with this id does not exists");
+            }
+
+            if (!await _dataContext.Doctors.AnyAsync(x => x.Id.Equals(doctorId)))
+            {
+                return BadRequest("Doctor with this id does not exists");
+            }
+
+            var patient = _dataContext.Patients.First(x => x.Id == patientId);
+            if(await _dataContext.Doctors.AnyAsync(x => x.Patients.Contains(patient)))
+            {
+                return BadRequest("This patient already assigned to this doctor");
+            }
+
+            var doctor = _dataContext.Doctors.First(x => x.Id == doctorId);
+
+            if (doctor.Patients == null)
+                doctor.Patients = new List<Models.Patient>();
+
+            doctor.Patients.Add(patient);
+            await _dataContext.SaveChangesAsync();
+
+            return Ok(doctor);
+        }
+
+        [HttpPost("Unassign Patient")]
+        public async Task<ActionResult<string>> UnassignPatient(int patientId, int doctorId)
+        {
+            if (!await _dataContext.Patients.AnyAsync(x => x.Id.Equals(patientId)))
+            {
+                return BadRequest("Patient with this id does not exists");
+            }
+
+            if (!await _dataContext.Doctors.AnyAsync(x => x.Id.Equals(doctorId)))
+            {
+                return BadRequest("Doctor with this id does not exists");
+            }
+
+            var patient = _dataContext.Patients.First(x => x.Id == patientId);
+            if (!_dataContext.Doctors.Include("Patients").First(x => x.Id == doctorId).Patients.Contains(patient))
+            {
+                return BadRequest("This patient is not assigned to this doctor");
+            }
+
+            var doctor = _dataContext.Doctors.First(x => x.Id == doctorId);
+
+            if (doctor.Patients == null)
+                doctor.Patients = new List<Models.Patient>();
+
+            doctor.Patients.Remove(patient);
+            await _dataContext.SaveChangesAsync();
+
+            return Ok(doctor);
+        }
+
         //[HttpPost]
         //public async Task<ActionResult<string>> CommentPoll(PollDto, )
     }
