@@ -124,6 +124,7 @@ namespace QMSL.Controllers
         {
             List<Claim> claim = new List<Claim>
             {
+                new Claim(ClaimTypes.SerialNumber, user.Id.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Name),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, Role)

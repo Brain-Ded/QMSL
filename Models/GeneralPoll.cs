@@ -8,9 +8,9 @@ namespace QMSL.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<GeneralQuestion> Questions { get; set; }
+        public List<GeneralQuestion> Questions { get; set; } = new List<GeneralQuestion>();
         public int DoctorId { get; set; }
-        public Doctor Doctor { get; set; } = null!;
+        //public Doctor Doctor { get; set; } = null!;
     }
 
     public partial class GeneralPoll : Poll

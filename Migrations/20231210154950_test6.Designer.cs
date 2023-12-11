@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QMSL;
 
@@ -11,9 +12,11 @@ using QMSL;
 namespace QMSL.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231210154950_test6")]
+    partial class test6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -303,47 +306,57 @@ namespace QMSL.Migrations
 
             modelBuilder.Entity("QMSL.Models.Comment", b =>
                 {
-                    b.HasOne("QMSL.Models.EditablePoll", null)
+                    b.HasOne("QMSL.Models.EditablePoll", "EditablePoll")
                         .WithMany("Comments")
                         .HasForeignKey("EditablePollId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("EditablePoll");
                 });
 
             modelBuilder.Entity("QMSL.Models.EditablePoll", b =>
                 {
-                    b.HasOne("QMSL.Models.Patient", null)
+                    b.HasOne("QMSL.Models.Patient", "Patients")
                         .WithMany("Polls")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Patients");
                 });
 
             modelBuilder.Entity("QMSL.Models.EditableQuestion", b =>
                 {
-                    b.HasOne("QMSL.Models.EditablePoll", null)
+                    b.HasOne("QMSL.Models.EditablePoll", "EditablePoll")
                         .WithMany("Questions")
                         .HasForeignKey("EditablePollId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("EditablePoll");
                 });
 
             modelBuilder.Entity("QMSL.Models.GeneralPoll", b =>
                 {
-                    b.HasOne("QMSL.Models.Doctor", null)
+                    b.HasOne("QMSL.Models.Doctor", "Doctor")
                         .WithMany("Polls")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("QMSL.Models.GeneralQuestion", b =>
                 {
-                    b.HasOne("QMSL.Models.GeneralPoll", null)
+                    b.HasOne("QMSL.Models.GeneralPoll", "GeneralPoll")
                         .WithMany("Questions")
                         .HasForeignKey("GeneralPollId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("GeneralPoll");
                 });
 
             modelBuilder.Entity("QMSL.Models.Doctor", b =>
