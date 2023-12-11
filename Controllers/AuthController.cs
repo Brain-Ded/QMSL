@@ -20,6 +20,8 @@ namespace QMSL.Controllers
     {
         private readonly DataContext _dataContext;
         private readonly IConfiguration _config;
+        private readonly DoctorFactory doctorFactory;
+        private readonly PatientFactory patientFactory;
 
         public AuthController(DataContext dataContext, IConfiguration configuration)
         {
@@ -45,19 +47,11 @@ namespace QMSL.Controllers
                 return BadRequest("Some fields were wrongly typed");
 
             CreatePasswordHash(request.Password, out byte[] passwordHash);
+
             if (type)
             {
-                var user = new Patient()
-                {
-                    Name = request.Name,
-                    Surname = request.Surname,
-                    Fathername = request.Fathername,
-                    PhoneNumber = request.PhoneNumber,
-                    Sex = request.Sex,
-                    Age = request.Age,
-                    Email = request.Email,
-                    Password = passwordHash
-                };
+                var user = (Patient)patientFactory.CreateUser(request);
+                user.Password = passwordHash;
 
                 _dataContext.Patients.Add(user);
 
@@ -66,17 +60,8 @@ namespace QMSL.Controllers
             }
             else
             {
-                var user = new Doctor()
-                {
-                    Name = request.Name,
-                    Surname = request.Surname,
-                    Fathername = request.Fathername,
-                    PhoneNumber = request.PhoneNumber,
-                    Sex = request.Sex,
-                    Age = request.Age,
-                    Email = request.Email,
-                    Password = passwordHash
-                };
+                var user = (Doctor)doctorFactory.CreateUser(request);
+                user.Password = passwordHash;
 
                 _dataContext.Doctors.Add(user);
 
@@ -148,7 +133,7 @@ namespace QMSL.Controllers
             return jwt;
         }
 
-        private void CreatePasswordHash(string password, out byte[] passwordHash)
+        public void CreatePasswordHash(string password, out byte[] passwordHash)
         {
             using (var hmac = new HMACSHA512())
             {
@@ -157,7 +142,7 @@ namespace QMSL.Controllers
             }
         }
 
-        private byte[] VerifyPasswordHash(string password)
+        public byte[] VerifyPasswordHash(string password)
         {
             byte[] passwordHash;
             using (var hmac = new HMACSHA512())

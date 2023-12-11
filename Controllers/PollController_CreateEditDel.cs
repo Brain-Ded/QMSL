@@ -79,11 +79,11 @@ namespace QMSL.Controllers
 
             for(int i=0; i<generalQuestions.Count; ++i)
             {
-                generalQuestions[i].Answers = new List<Answer>();
+                generalQuestions[i].GeneralAnswers = new List<GeneralAnswer>();
                 for (int j=0; j<poll.Questions[i].Answers.Count; ++j)
                 {
                     
-                    generalQuestions[i].Answers.Add(new Answer()
+                    generalQuestions[i].GeneralAnswers.Add(new GeneralAnswer()
                     {
                         GeneralQuestionId = generalQuestions[i].Id,
                         Text = poll.Questions[i].Answers[j].Text,
