@@ -14,7 +14,8 @@ namespace QMSL.Dtos
                 PhoneNumber = newUser.PhoneNumber,
                 Sex = newUser.Sex,
                 Age = newUser.Age,
-                Email = newUser.Email
+                Email = newUser.Email,
+                Disease = newUser.Disease              
             };
         }
     }
