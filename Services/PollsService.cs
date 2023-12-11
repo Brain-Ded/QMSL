@@ -25,10 +25,7 @@ namespace QMSL.Services
             if(patient == null || poll == null)
                 throw new ArgumentNullException();
 
-            if (patient.Polls == null)
-                patient.Polls = new List<EditablePoll>();
-
-            patient.Polls.Add(poll);
+            poll.PatientId = patient.Id;
             return patient;
         }
         //Nazar

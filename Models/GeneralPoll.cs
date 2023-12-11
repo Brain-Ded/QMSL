@@ -21,7 +21,12 @@ namespace QMSL.Models
         }
         public EditablePoll getEditCopy()
         {
-            return new EditablePoll();
+            return new EditablePoll()
+            {
+                Name = Name,
+                Questions = new List<EditableQuestion>(),
+                IsPassed = false
+            };
         }
     }
 }
