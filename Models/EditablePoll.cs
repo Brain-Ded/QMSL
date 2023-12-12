@@ -12,7 +12,6 @@ namespace QMSL.Models
         public List<Comment> Comments { get; set; }
         public bool IsPassed { get; set; }
         public int PatientId { get; set; }
-
         public DateTime AssignedAt { get; set; }
         public DateTime PassedAt { get; set; }
         //public Patient Patients { get; set; } = null!;

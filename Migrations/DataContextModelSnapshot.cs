@@ -34,7 +34,7 @@ namespace QMSL.Migrations
 
                     b.HasIndex("PatientsId");
 
-                    b.ToTable("DoctorPatient");
+                    b.ToTable("DoctorPatient", (string)null);
                 });
 
             modelBuilder.Entity("GeneralAnswer", b =>
@@ -56,7 +56,7 @@ namespace QMSL.Migrations
 
                     b.HasIndex("GeneralQuestionId");
 
-                    b.ToTable("GeneralAnswers");
+                    b.ToTable("GeneralAnswers", (string)null);
                 });
 
             modelBuilder.Entity("QMSL.Models.Comment", b =>
@@ -87,7 +87,7 @@ namespace QMSL.Migrations
 
                     b.HasIndex("EditablePollId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("QMSL.Models.Doctor", b =>
@@ -130,7 +130,7 @@ namespace QMSL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Doctors");
+                    b.ToTable("Doctors", (string)null);
                 });
 
             modelBuilder.Entity("QMSL.Models.EditableAnswer", b =>
@@ -152,7 +152,7 @@ namespace QMSL.Migrations
 
                     b.HasIndex("EditableQuestionId");
 
-                    b.ToTable("EditableAnswers");
+                    b.ToTable("EditableAnswers", (string)null);
                 });
 
             modelBuilder.Entity("QMSL.Models.EditablePoll", b =>
@@ -183,7 +183,7 @@ namespace QMSL.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("EditablePolls");
+                    b.ToTable("EditablePolls", (string)null);
                 });
 
             modelBuilder.Entity("QMSL.Models.EditableQuestion", b =>
@@ -208,7 +208,7 @@ namespace QMSL.Migrations
 
                     b.HasIndex("EditablePollId");
 
-                    b.ToTable("EditableQuestions");
+                    b.ToTable("EditableQuestions", (string)null);
                 });
 
             modelBuilder.Entity("QMSL.Models.GeneralPoll", b =>
@@ -230,7 +230,7 @@ namespace QMSL.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.ToTable("GeneralPolls");
+                    b.ToTable("GeneralPolls", (string)null);
                 });
 
             modelBuilder.Entity("QMSL.Models.GeneralQuestion", b =>
@@ -252,7 +252,7 @@ namespace QMSL.Migrations
 
                     b.HasIndex("GeneralPollId");
 
-                    b.ToTable("GeneralQuestions");
+                    b.ToTable("GeneralQuestions", (string)null);
                 });
 
             modelBuilder.Entity("QMSL.Models.Patient", b =>
@@ -299,7 +299,7 @@ namespace QMSL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Patients");
+                    b.ToTable("Patients", (string)null);
                 });
 
             modelBuilder.Entity("DoctorPatient", b =>
