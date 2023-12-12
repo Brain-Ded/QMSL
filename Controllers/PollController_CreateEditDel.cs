@@ -28,18 +28,18 @@ namespace QMSL.Controllers
         }
 
         [HttpPost("CreatePoll")]
-        public async Task<ActionResult<string>> CreatePoll(PollDto poll, string DoctorEmail)
+        public async Task<ActionResult<string>> CreatePoll(PollDto poll)
         {
             if(await _dataContext.GeneralPolls.AnyAsync(x => x.Name.Equals(poll.Name)))
             {
                 return BadRequest("Poll with this name already exist");
             }
-            if (!await _dataContext.Doctors.AnyAsync(x => x.Email.Equals(DoctorEmail)))
+            if (!await _dataContext.Doctors.AnyAsync(x => x.Email.Equals(poll.DoctorEmail)))
             {
                 return BadRequest("Doctor with this email does not exist");
             }
 
-            Doctor doctor = await _dataContext.Doctors.FirstAsync(x => x.Email.Equals(DoctorEmail));
+            Doctor doctor = await _dataContext.Doctors.FirstAsync(x => x.Email.Equals(poll.DoctorEmail));
 
             foreach(GeneralQuestionDto question in poll.Questions)
             {
