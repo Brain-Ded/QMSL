@@ -36,13 +36,31 @@
 
         private static bool CheckForSpecialSymbolsE(string Email) 
         {
-            return Email.Contains("@") && !Email.Any(x => (x.Equals("\\") 
-            || x.Equals(",") || x.Equals("?") || x.Equals(" ")));
+            char[] symbolsToCheck = {'#', '%', '$', '\\', '/' };
+
+            foreach (char character in Email)
+            {
+                if (Array.IndexOf(symbolsToCheck, character) != -1)
+                {
+                    return false;
+                }
+            }
+
+            return Email.Contains("@");
         }
         private static bool CheckForSpecialSymbolsP(string Password) 
         {
-            return !Password.Any(x => (x.Equals("\\") || x.Equals(",") 
-            || x.Equals("?") || x.Equals("@") || x.Equals(" ")));
+            char[] symbolsToCheck = { '@', '#', '%', '$', '\\', '/', ' ' };
+
+            foreach (char character in Password)
+            {
+                if (Array.IndexOf(symbolsToCheck, character) != -1)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
