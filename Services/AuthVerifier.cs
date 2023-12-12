@@ -11,11 +11,11 @@
             {
                 if (Array.IndexOf(symbolsToCheck, character) != -1)
                 {
-                    return false;
+                    return true;
                 }
             }
 
-            return true;
+            return false;
         }
         public static bool LoginVerification(string Email, string Password)
         {
