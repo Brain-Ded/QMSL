@@ -49,7 +49,7 @@ namespace QMSL.Controllers
         [HttpGet("GetPatientById")]
         public async Task<ActionResult<string>> GetPatientById(int patientId)
         {
-            return Ok(_dataContext.Patients.Find(patientId));
+            return Ok(await _dataContext.Patients.FindAsync(patientId));
         }
 
         [HttpGet("GetAllPatients")]

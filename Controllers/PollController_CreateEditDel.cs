@@ -118,8 +118,10 @@ namespace QMSL.Controllers
         }
 
         [HttpPost("DeletePoll")]
-        public async Task<ActionResult<string>> DeletePoll(GeneralPoll poll)
+        public async Task<ActionResult<string>> DeletePoll(int pollId)
         {
+            GeneralPoll poll =  await _dataContext.GeneralPolls.FindAsync(pollId);
+
             _dataContext.GeneralPolls.Remove(poll);
 
             await _dataContext.SaveChangesAsync();
@@ -134,11 +136,19 @@ namespace QMSL.Controllers
             return Ok(_dataContext.GeneralPolls.Include(x => x.Questions).ThenInclude(y => y.GeneralAnswers).Where(x=>x.DoctorId == doctorId));
         }
 
-        [HttpGet("GetPollPatients")]
-        public async Task<ActionResult<string>> GetPollPatients(string pollName, int patientId)
+        [HttpGet("GetPatientsPoll")]
+        public async Task<ActionResult<string>> GetPatientsPoll(int patientId)
         {
             return Ok(_dataContext.EditablePolls.Include(x => x.Questions).ThenInclude(y => y.EditableAnswers)
-                .Where(z => z.Name.Equals(pollName) && z.PatientId == patientId));
+                .Where(z => z.PatientId == patientId));
+        }
+
+        [HttpGet("GetPollPatients")]
+        public async Task<ActionResult<string>> GetAllPollPatients(string pollName)
+        {
+            List<int> patientIds = _dataContext.EditablePolls.Where(x => x.Name.Equals(pollName)).Select(y => y.PatientId).ToList();
+
+            return Ok(_dataContext.Patients.Where(x => patientIds.Contains(x.Id)));
         }
 
         [HttpGet("GetPollById")]
