@@ -32,7 +32,7 @@ namespace QMSL.Controllers
         [HttpGet("GetPatientDoctors")]
         public async Task<ActionResult<string>> GetDoctorPatients(int patientId)
         {
-            return Ok(_dataContext.Patients.Where(x => x.Id == patientId).Include("Doctors").Include("Polls"));
+            return Ok(_dataContext.Patients.Where(x => x.Id == patientId).Select(x=>x.Doctors));
         }
 
         [HttpGet("GetDoctorPatients")]

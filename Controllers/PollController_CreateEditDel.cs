@@ -165,10 +165,10 @@ namespace QMSL.Controllers
             return Ok(_dataContext.Patients.Where(x => patientIds.Contains(x.Id)));
         }
 
-        //[HttpGet("GetPollById")]
-        //public async Task<ActionResult<string>> GetPollById(int pollId)
-        //{
-        //    return Ok(_dataContext.GeneralPolls.Where(x => x.Id == pollId).Select(x => x.Questions.Select(y=> y.GeneralAnswers)));
-        //}
+        [HttpGet("GetPollById")]
+        public async Task<ActionResult<string>> GetPollById(int pollId)
+        {
+            return Ok(_dataContext.GeneralPolls.Include(x=>x.Questions).ThenInclude(y=>y.GeneralAnswers).Where(x => x.Id == pollId));
+        }
     }
 }
