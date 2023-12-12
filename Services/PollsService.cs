@@ -25,6 +25,8 @@ namespace QMSL.Services
             if(patient == null || poll == null)
                 throw new ArgumentNullException();
 
+            poll.AssignedAt = DateTime.Now;
+
             poll.PatientId = patient.Id;
             return patient;
         }

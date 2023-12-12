@@ -3,9 +3,19 @@
     //Vlad
     public static class AuthVerifier
     {
-        public static bool NameVerification(string Name)
+        public static bool TextVerification(string Name)
         {
-            return CheckForSpecialSymbolsE(Name);
+            char[] symbolsToCheck = { '@', '#', '%', '$', '\\', '/' };
+
+            foreach (char character in Name)
+            {
+                if (Array.IndexOf(symbolsToCheck, character) != -1)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
         public static bool LoginVerification(string Email, string Password)
         {

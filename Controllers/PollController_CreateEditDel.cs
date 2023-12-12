@@ -43,9 +43,9 @@ namespace QMSL.Controllers
 
             foreach(GeneralQuestionDto question in poll.Questions)
             {
-                if (AuthVerifier.NameVerification(question.Name))
+                if (AuthVerifier.TextVerification(question.Name))
                 {
-                    return BadRequest("Bad name");
+                    return BadRequest("Bad question name");
                 }
             }
 
@@ -82,7 +82,10 @@ namespace QMSL.Controllers
                 generalQuestions[i].GeneralAnswers = new List<GeneralAnswer>();
                 for (int j=0; j<poll.Questions[i].Answers.Count; ++j)
                 {
-                    
+                    if (AuthVerifier.TextVerification(poll.Questions[i].Answers[j].Text))
+                    {
+                        return BadRequest("Bad answer text");
+                    }
                     generalQuestions[i].GeneralAnswers.Add(new GeneralAnswer()
                     {
                         GeneralQuestionId = generalQuestions[i].Id,
@@ -129,6 +132,13 @@ namespace QMSL.Controllers
         {
             
             return Ok(_dataContext.GeneralPolls.Include(x => x.Questions).ThenInclude(y => y.GeneralAnswers));
+        }
+
+        [HttpGet("GetPollPatients")]
+        public async Task<ActionResult<string>> GetPollPatients(string pollName, int patientId)
+        {
+            return Ok(_dataContext.EditablePolls.Include(x => x.Questions).ThenInclude(y => y.EditableAnswers)
+                .Where(z => z.Name.Equals(pollName) && z.PatientId == patientId));
         }
 
         //[HttpGet("GetPollById")]

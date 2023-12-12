@@ -8,6 +8,7 @@ namespace QMSL_UTestAuth
         [SetUp]
         public void Setup()
         {
+            
         }
 
         [Test]
@@ -65,6 +66,12 @@ namespace QMSL_UTestAuth
             string invalPhone = "324234";
             Assert.IsTrue(invalEmail!=null && invalPassword!=null && invalName!=null && invalSurname != null
                 && invalFathername != null && invalSex != null && invalAge>=0 && invalPhone != null);
+        }
+
+        [Test]
+        public void TestVerificationText()
+        {
+            Assert.IsTrue(AuthVerifier.TextVerification("Sex"));
         }
     }
 }
