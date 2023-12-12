@@ -141,10 +141,10 @@ namespace QMSL.Controllers
                 .Where(z => z.Name.Equals(pollName) && z.PatientId == patientId));
         }
 
-        //[HttpGet("GetPollById")]
-        //public async Task<ActionResult<string>> GetPollById(int pollId)
-        //{
-        //    return Ok(_dataContext.GeneralPolls.Where(x => x.Id == pollId).Select(x => x.Questions.Select(y=> y.GeneralAnswers)));
-        //}
+        [HttpGet("GetPollById")]
+        public async Task<ActionResult<string>> GetPollById(int pollId)
+        {
+            return Ok(_dataContext.GeneralPolls.Include(x=>x.Questions).ThenInclude(y=>y.GeneralAnswers).Where(x => x.Id == pollId));
+        }
     }
 }
