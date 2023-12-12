@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QMSL.Dtos;
+using QMSL.Models;
 using QMSL.Services;
 using System.Runtime.CompilerServices;
 
@@ -21,7 +22,7 @@ namespace QMSL.Controllers
             _pollsService = new PollsService();
         }
 
-        [HttpPost("Assign")]
+        [HttpPost("Assign Poll to Patient")]
         public async Task<ActionResult<string>> AssignPoll(PollDto poll, string patientEmail)
         {
             if(!await _dataContext.Patients.AnyAsync(x => x.Email.Equals(patientEmail)))
@@ -29,23 +30,23 @@ namespace QMSL.Controllers
                 return BadRequest("Patient with this email does not exists");
             }
 
-            var patient = _dataContext.Patients.First(x => x.Email == patientEmail);
+            var patient = _dataContext.Patients.Include("Polls").First(x => x.Email == patientEmail);
 
-            if(patient.Polls != null && patient.Polls.Any(x => x.Name == poll.Name))
+            if(patient.Polls.Any(x => x.Name == poll.Name))
             {
                 return BadRequest("Patient with this email already has this poll");
             }
 
-            var generalPoll = _dataContext.GeneralPolls.First(x => x.Name == poll.Name).getEditCopy();
-            _dataContext.EditablePolls.Add(generalPoll);
+            var editablePoll = _dataContext.GeneralPolls.First(x => x.Name == poll.Name).getEditCopy();
+            _dataContext.EditablePolls.Add(editablePoll);
 
-            _pollsService.AssignPoll(patient, generalPoll);
+            _pollsService.AssignPoll(patient, editablePoll);
             await _dataContext.SaveChangesAsync();
 
-            return Ok();
+            return Ok(patient);
         }
 
-        [HttpPost("Unassign")]
+        [HttpPost("Unassign Poll from Patient")]
         public async Task<ActionResult<string>> UnassignPoll(PollDto poll, string patientEmail)
         {
             if (!await _dataContext.Patients.AnyAsync(x => x.Email.Equals(patientEmail)))
@@ -53,9 +54,9 @@ namespace QMSL.Controllers
                 return BadRequest("Patient with this email does not exists");
             }
 
-            var patient = _dataContext.Patients.First(x => x.Email == patientEmail);
+            var patient = _dataContext.Patients.Include("Polls").First(x => x.Email == patientEmail);
 
-            if (patient.Polls == null || !patient.Polls.Any(x => x.Name == poll.Name))
+            if (!patient.Polls.Any(x => x.Name == poll.Name))
             {
                 return BadRequest("Patient with this email doesn't has this poll");
             }
@@ -86,10 +87,7 @@ namespace QMSL.Controllers
                 return BadRequest("This patient already assigned to this doctor");
             }
 
-            var doctor = _dataContext.Doctors.First(x => x.Id == doctorId);
-
-            if (doctor.Patients == null)
-                doctor.Patients = new List<Models.Patient>();
+            var doctor = _dataContext.Doctors.Include("Patients").First(x => x.Id == doctorId);
 
             doctor.Patients.Add(patient);
             await _dataContext.SaveChangesAsync();
@@ -127,7 +125,48 @@ namespace QMSL.Controllers
             return Ok(doctor);
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<string>> CommentPoll(PollDto, )
+        [HttpPost("Comment Poll")]
+        public async Task<ActionResult<string>> CommentPoll(int pollId, CommentDto commentDto)
+        {
+            if(!await _dataContext.EditablePolls.AnyAsync(x => x.Id.Equals(pollId)))
+            {
+                return BadRequest("Poll with this id is not exists");
+            }
+
+            if(!await _dataContext.Doctors.AnyAsync(x => x.Id == commentDto.DoctorId))
+            {
+                return BadRequest("Doctor with this id is not exists");
+            }
+
+            var dbPoll = _dataContext.EditablePolls.Include("Comments").First(x => x.Id == pollId);
+            Comment comment = new Comment() { Text = commentDto.Text, DoctorId = commentDto.DoctorId, type = commentDto.Type, CommentedAt = DateTime.Now };
+
+            var commentToAdd = _dataContext.Comments.Add(comment);
+            _pollsService.CommentPoll(dbPoll, commentToAdd.Entity);
+            await _dataContext.SaveChangesAsync();
+
+            return Ok(dbPoll);
+        }
+
+        [HttpPost("Pass Poll")]
+        public async Task<ActionResult<string>> PassPoll(int pollId)
+        {
+            if(!await _dataContext.EditablePolls.AnyAsync(x => x.Id == pollId))
+            {
+                return BadRequest("Poll with this id is not exists");
+            }
+
+            var poll = _dataContext.EditablePolls.First(x => x.Id == pollId);
+
+            if(poll.IsPassed)
+            {
+                return Ok("Poll is already passed");
+            }
+
+            _pollsService.PassPoll(poll);
+            await _dataContext.SaveChangesAsync();
+
+            return Ok(poll);
+        }
     }
 }
