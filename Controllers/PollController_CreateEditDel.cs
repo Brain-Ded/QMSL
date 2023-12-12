@@ -104,15 +104,25 @@ namespace QMSL.Controllers
         [HttpPost("EditPoll")]
         public async Task<ActionResult<string>> EditPoll(GeneralPoll poll)
         {
-            GeneralPoll generalPoll = await _dataContext.GeneralPolls.FindAsync(poll.Id);
+            _dataContext.GeneralPolls.Remove(poll);
 
+            GeneralPoll generalPoll = new GeneralPoll(); 
+
+            generalPoll.Id = poll.Id;
+            generalPoll.DoctorId = poll.DoctorId;
             generalPoll.Name = poll.Name;
-            generalPoll.Questions = poll.Questions;
 
+            generalPoll.Questions = new List<GeneralQuestion>();
 
+            foreach(GeneralQuestion question in poll.Questions)
+            {
+                generalPoll.Questions.Add(question);
+            }
+
+            _dataContext.GeneralPolls.Add(generalPoll);
             await _dataContext.SaveChangesAsync();
 
-            generalPoll = _dataContext.GeneralPolls.First(x => x.Name.Equals(generalPoll.Name));
+            generalPoll = await _dataContext.GeneralPolls.FindAsync(generalPoll.Id);
 
             return Ok(generalPoll);
         }
@@ -122,7 +132,11 @@ namespace QMSL.Controllers
         {
             GeneralPoll poll =  await _dataContext.GeneralPolls.FindAsync(pollId);
 
+            if(poll != null)
             _dataContext.GeneralPolls.Remove(poll);
+            else
+                return BadRequest("Bad poll Id");
+
 
             await _dataContext.SaveChangesAsync();
 
