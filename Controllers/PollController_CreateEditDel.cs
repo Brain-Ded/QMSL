@@ -128,7 +128,7 @@ namespace QMSL.Controllers
         public async Task<ActionResult<string>> GetDoctorPolls(int doctorId)
         {
             
-            return Ok(_dataContext.GeneralPolls.Include(x => x.Questions).ThenInclude(y => y.GeneralAnswers));
+            return Ok(_dataContext.GeneralPolls.Include(x => x.Questions).ThenInclude(y => y.GeneralAnswers).Where(x=>x.DoctorId == doctorId));
         }
 
         //[HttpGet("GetPollById")]
