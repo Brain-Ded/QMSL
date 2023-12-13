@@ -73,9 +73,8 @@ namespace QMSL.Controllers
                 return BadRequest("Patient with this email doesn't has this poll");
             }
 
-            var editPoll = _dataContext.EditablePolls.FirstOrDefault(x => x.Name == poll.Name);
-            _pollsService.UnassignPoll(patient, editPoll.Id);
-            _dataContext.EditablePolls.Remove(editPoll);
+            _pollsService.UnassignPoll(patient, pollId);
+            _dataContext.EditablePolls.Remove(poll);
             await _dataContext.SaveChangesAsync();
 
             return Ok(patient);
@@ -95,7 +94,7 @@ namespace QMSL.Controllers
             }
 
             var patient = _dataContext.Patients.Include("Doctors").First(x => x.Id == patientId);
-            if(await _dataContext.Doctors.AnyAsync(x => x.Patients.Contains(patient)))
+            if (_dataContext.Doctors.Include(d => d.Patients).First(d => d.Id == doctorId).Patients.Contains(patient))
             {
                 return BadRequest("This patient already assigned to this doctor");
             }
