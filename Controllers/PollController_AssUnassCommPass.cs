@@ -23,14 +23,20 @@ namespace QMSL.Controllers
         }
 
         [HttpPost("Assign Poll to Patient")]
-        public async Task<ActionResult<string>> AssignPoll(PollDto poll, string patientEmail)
+        public async Task<ActionResult<string>> AssignPoll(int pollId, string patientEmail)
         {
             if(!await _dataContext.Patients.AnyAsync(x => x.Email.Equals(patientEmail)))
             {
                 return BadRequest("Patient with this email does not exists");
             }
 
+            if(!await _dataContext.GeneralPolls.AnyAsync(x => x.Id == pollId))
+            {
+                return BadRequest("Poll with this id does not exists");
+            }
+
             var patient = _dataContext.Patients.Include("Polls").First(x => x.Email == patientEmail);
+            var poll = _dataContext.GeneralPolls.First(x => x.Id == pollId);
 
             if(patient.Polls.Any(x => x.Name == poll.Name))
             {
@@ -47,14 +53,20 @@ namespace QMSL.Controllers
         }
 
         [HttpPost("Unassign Poll from Patient")]
-        public async Task<ActionResult<string>> UnassignPoll(PollDto poll, string patientEmail)
+        public async Task<ActionResult<string>> UnassignPoll(int pollId, string patientEmail)
         {
             if (!await _dataContext.Patients.AnyAsync(x => x.Email.Equals(patientEmail)))
             {
                 return BadRequest("Patient with this email does not exists");
             }
 
+            if(!await _dataContext.EditablePolls.AnyAsync(x => x.Id == pollId))
+            {
+                return BadRequest("Poll with this id does not exists");
+            }
+
             var patient = _dataContext.Patients.Include("Polls").First(x => x.Email == patientEmail);
+            var poll = _dataContext.EditablePolls.First(x => x.Id == pollId);
 
             if (!patient.Polls.Any(x => x.Name == poll.Name))
             {
@@ -63,6 +75,7 @@ namespace QMSL.Controllers
 
             var editPoll = _dataContext.EditablePolls.FirstOrDefault(x => x.Name == poll.Name);
             _pollsService.UnassignPoll(patient, editPoll.Id);
+            _dataContext.EditablePolls.Remove(editPoll);
             await _dataContext.SaveChangesAsync();
 
             return Ok(patient);
@@ -81,7 +94,7 @@ namespace QMSL.Controllers
                 return BadRequest("Doctor with this id does not exists");
             }
 
-            var patient = _dataContext.Patients.First(x => x.Id == patientId);
+            var patient = _dataContext.Patients.Include("Doctors").First(x => x.Id == patientId);
             if(await _dataContext.Doctors.AnyAsync(x => x.Patients.Contains(patient)))
             {
                 return BadRequest("This patient already assigned to this doctor");
@@ -90,6 +103,7 @@ namespace QMSL.Controllers
             var doctor = _dataContext.Doctors.Include("Patients").First(x => x.Id == doctorId);
 
             doctor.Patients.Add(patient);
+            patient.Doctors.Add(doctor);
             await _dataContext.SaveChangesAsync();
 
             return Ok(doctor);
@@ -108,7 +122,7 @@ namespace QMSL.Controllers
                 return BadRequest("Doctor with this id does not exists");
             }
 
-            var patient = _dataContext.Patients.First(x => x.Id == patientId);
+            var patient = _dataContext.Patients.Include("Doctors").First(x => x.Id == patientId);
             if (!_dataContext.Doctors.Include("Patients").First(x => x.Id == doctorId).Patients.Contains(patient))
             {
                 return BadRequest("This patient is not assigned to this doctor");
@@ -120,6 +134,7 @@ namespace QMSL.Controllers
                 doctor.Patients = new List<Models.Patient>();
 
             doctor.Patients.Remove(patient);
+            patient.Doctors.Remove(doctor);
             await _dataContext.SaveChangesAsync();
 
             return Ok(doctor);

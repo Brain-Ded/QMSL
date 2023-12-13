@@ -28,6 +28,7 @@ namespace QMSL.Services
             poll.AssignedAt = DateTime.Now;
 
             poll.PatientId = patient.Id;
+            patient.Polls.Add(poll);
             return patient;
         }
         //Nazar
@@ -59,6 +60,8 @@ namespace QMSL.Services
                 poll.Comments = new List<Comment>();
 
             poll.Comments.Add(comment);
+            comment.EditablePollId = poll.Id;
+            comment.CommentedAt = DateTime.Now;
 
             return poll;
         }
@@ -71,6 +74,7 @@ namespace QMSL.Services
         {
             if (poll == null) throw new ArgumentNullException();
 
+            poll.PassedAt = DateTime.Now;
             poll.IsPassed = true;
             return poll;
         }
