@@ -20,11 +20,13 @@ namespace QMSL.Controllers
     {
         private readonly DataContext _dataContext;
         private readonly IConfiguration _config;
+        private readonly PollsService _pollsService;
 
         public PollController_CreateEditDel(DataContext dataContext, IConfiguration configuration)
         {
             _dataContext = dataContext;
             _config = configuration;
+            _pollsService = new PollsService();
         }
 
         [HttpPost("CreatePoll")]
@@ -104,25 +106,43 @@ namespace QMSL.Controllers
         [HttpPost("EditPoll")]
         public async Task<ActionResult<string>> EditPoll(GeneralPoll poll)
         {
-            _dataContext.GeneralPolls.Remove(poll);
 
-            GeneralPoll generalPoll = new GeneralPoll(); 
+            GeneralPoll generalPoll = await _dataContext.GeneralPolls.FirstAsync(x => x.Id == poll.Id); 
 
-            generalPoll.Id = poll.Id;
-            generalPoll.DoctorId = poll.DoctorId;
             generalPoll.Name = poll.Name;
 
-            generalPoll.Questions = new List<GeneralQuestion>();
+            var questions = _dataContext.GeneralQuestions.Where(x => x.GeneralPollId == poll.Id).ToList();
 
-            foreach(GeneralQuestion question in poll.Questions)
+            questions.Clear();
+            questions.AddRange(poll.Questions);
+
+            List<int> questionsIds = questions.Select(x => x.Id).ToList();
+
+            var answers = _dataContext.GeneralAnswers.Where(x => questionsIds.Contains(x.Id)).ToList();
+
+            List<GeneralAnswer> generalAnswers = new List<GeneralAnswer>();
+
+            foreach (var item in poll.Questions)
             {
-                generalPoll.Questions.Add(question);
+                generalAnswers.AddRange(item.GeneralAnswers);
             }
 
-            _dataContext.GeneralPolls.Add(generalPoll);
+            answers.Clear();
+            answers.AddRange(generalAnswers);
+
             await _dataContext.SaveChangesAsync();
 
-            generalPoll = await _dataContext.GeneralPolls.FindAsync(generalPoll.Id);
+            List<int> patientIds = _dataContext.EditablePolls.Where(x => x.Name.Equals(poll.Name))
+                .Select(y => y.PatientId).ToList();
+
+
+            //ДОПИСАТИ ЕДІТ ПОЛЛС
+            foreach (var patientId in patientIds)
+            {
+                //_dataContext.EditablePolls
+            }
+
+            generalPoll = _dataContext.GeneralPolls.Include(x => x.Questions).ThenInclude(y=> y.GeneralAnswers).First(z=> z.Id == generalPoll.Id);
 
             return Ok(generalPoll);
         }
@@ -130,7 +150,27 @@ namespace QMSL.Controllers
         [HttpPost("DeletePoll")]
         public async Task<ActionResult<string>> DeletePoll(int pollId)
         {
-            GeneralPoll poll =  await _dataContext.GeneralPolls.FindAsync(pollId);
+            GeneralPoll poll =  _dataContext.GeneralPolls.Include(x=> x.Questions)
+                .ThenInclude(y=>y.GeneralAnswers).First(z=> z.Id == pollId);
+
+            var questions = poll.Questions;
+
+            List<GeneralAnswer> generalAnswers = new List<GeneralAnswer>();
+
+            foreach (var question in questions)
+            {
+                generalAnswers.AddRange(question.GeneralAnswers);
+            }
+
+            foreach (var generalAnswer in generalAnswers)
+            {
+                _dataContext.GeneralAnswers.Remove(generalAnswer);
+            }
+
+            foreach(GeneralQuestion generalQuestion in questions)
+            {
+                _dataContext.GeneralQuestions.Remove(generalQuestion);
+            }
 
             if(poll != null)
             _dataContext.GeneralPolls.Remove(poll);
@@ -155,6 +195,13 @@ namespace QMSL.Controllers
         {
             return Ok(_dataContext.EditablePolls.Include(x => x.Questions).ThenInclude(y => y.EditableAnswers)
                 .Where(z => z.PatientId == patientId));
+        }
+
+
+        [HttpGet("GetEditPollId")]
+        public async Task<ActionResult<string>> GetEditPollId(int patientId, string pollName)
+        {
+            return Ok(_dataContext.EditablePolls.Where(x => x.Name.Equals(pollName) && x.PatientId == patientId).Select(y=> y.Id));
         }
 
         [HttpGet("GetPollPatients")]

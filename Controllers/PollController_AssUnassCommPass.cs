@@ -23,21 +23,21 @@ namespace QMSL.Controllers
         }
 
         [HttpPost("Assign Poll to Patient")]
-        public async Task<ActionResult<string>> AssignPoll(PollDto poll, string patientEmail)
+        public async Task<ActionResult<string>> AssignPoll(string pollName, int patientId)
         {
-            if(!await _dataContext.Patients.AnyAsync(x => x.Email.Equals(patientEmail)))
+            if (!await _dataContext.Patients.AnyAsync(x => x.Id == patientId))
             {
-                return BadRequest("Patient with this email does not exists");
+                return BadRequest("Patient with this id does not exists");
             }
 
-            var patient = _dataContext.Patients.Include("Polls").First(x => x.Email == patientEmail);
+            var patient = _dataContext.Patients.Include("Polls").First(x => x.Id == patientId);
 
-            if(patient.Polls.Any(x => x.Name == poll.Name))
+            if (patient.Polls.Any(x => x.Name == pollName))
             {
-                return BadRequest("Patient with this email already has this poll");
+                return BadRequest("Patient with this id doesn't has this poll");
             }
 
-            var editablePoll = _dataContext.GeneralPolls.First(x => x.Name == poll.Name).getEditCopy();
+            var editablePoll = _dataContext.GeneralPolls.First(x => x.Name == pollName).getEditCopy();
             _dataContext.EditablePolls.Add(editablePoll);
 
             _pollsService.AssignPoll(patient, editablePoll);
@@ -47,21 +47,21 @@ namespace QMSL.Controllers
         }
 
         [HttpPost("Unassign Poll from Patient")]
-        public async Task<ActionResult<string>> UnassignPoll(PollDto poll, string patientEmail)
+        public async Task<ActionResult<string>> UnassignPoll(string pollName, int patientId)
         {
-            if (!await _dataContext.Patients.AnyAsync(x => x.Email.Equals(patientEmail)))
+            if (!await _dataContext.Patients.AnyAsync(x => x.Id == patientId))
             {
-                return BadRequest("Patient with this email does not exists");
+                return BadRequest("Patient with this id does not exists");
             }
 
-            var patient = _dataContext.Patients.Include("Polls").First(x => x.Email == patientEmail);
+            var patient = _dataContext.Patients.Include("Polls").First(x => x.Id == patientId);
 
-            if (!patient.Polls.Any(x => x.Name == poll.Name))
+            if (!patient.Polls.Any(x => x.Name == pollName))
             {
-                return BadRequest("Patient with this email doesn't has this poll");
+                return BadRequest("Patient with this id doesn't has this poll");
             }
 
-            var editPoll = _dataContext.EditablePolls.FirstOrDefault(x => x.Name == poll.Name);
+            var editPoll = _dataContext.EditablePolls.FirstOrDefault(x => x.Name == pollName);
             _pollsService.UnassignPoll(patient, editPoll.Id);
             await _dataContext.SaveChangesAsync();
 
