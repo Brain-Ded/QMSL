@@ -109,38 +109,7 @@ namespace QMSL.Controllers
 
             GeneralPoll generalPoll = await _dataContext.GeneralPolls.FirstAsync(x => x.Id == poll.Id); 
 
-            generalPoll.Name = poll.Name;
-
-            var questions = _dataContext.GeneralQuestions.Where(x => x.GeneralPollId == poll.Id).ToList();
-
-            questions.Clear();
-            questions.AddRange(poll.Questions);
-
-            List<int> questionsIds = questions.Select(x => x.Id).ToList();
-
-            var answers = _dataContext.GeneralAnswers.Where(x => questionsIds.Contains(x.Id)).ToList();
-
-            List<GeneralAnswer> generalAnswers = new List<GeneralAnswer>();
-
-            foreach (var item in poll.Questions)
-            {
-                generalAnswers.AddRange(item.GeneralAnswers);
-            }
-
-            answers.Clear();
-            answers.AddRange(generalAnswers);
-
-            await _dataContext.SaveChangesAsync();
-
-            List<int> patientIds = _dataContext.EditablePolls.Where(x => x.Name.Equals(poll.Name))
-                .Select(y => y.PatientId).ToList();
-
-
-            //ДОПИСАТИ ЕДІТ ПОЛЛС
-            foreach (var patientId in patientIds)
-            {
-                //_dataContext.EditablePolls
-            }
+            
 
             generalPoll = _dataContext.GeneralPolls.Include(x => x.Questions).ThenInclude(y=> y.GeneralAnswers).First(z=> z.Id == generalPoll.Id);
 
