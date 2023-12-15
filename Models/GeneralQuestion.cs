@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QMSL.Models
 {
-    public class GeneralQuestion
+    public partial class GeneralQuestion
     {
         [Key]
         public int Id { get; set; }
@@ -12,5 +12,17 @@ namespace QMSL.Models
         public List<GeneralAnswer> GeneralAnswers { get; set; } = new List<GeneralAnswer>();
         public int GeneralPollId { get; set; }
         //public GeneralPoll GeneralPoll { get; set; } = null!;
+    }
+
+    public partial class GeneralQuestion
+    {
+        public EditableQuestion getEditCopy()
+        {
+            return new EditableQuestion()
+            {
+                Name = Name,
+                EditableAnswers = new List<EditableAnswer>(GeneralAnswers.Select(x => x.getEditCopy())),
+            };
+        }
     }
 }

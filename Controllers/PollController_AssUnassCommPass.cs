@@ -43,7 +43,7 @@ namespace QMSL.Controllers
                 return BadRequest("Patient with this email already has this poll");
             }
 
-            var editablePoll = _dataContext.GeneralPolls.First(x => x.Name == poll.Name).getEditCopy();
+            var editablePoll = _dataContext.GeneralPolls.Include(x => x.Questions).ThenInclude(y => y.GeneralAnswers).First(x => x.Name == poll.Name).getEditCopy();
             _dataContext.EditablePolls.Add(editablePoll);
 
             _pollsService.AssignPoll(patient, editablePoll);

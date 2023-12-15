@@ -24,7 +24,7 @@ namespace QMSL.Models
             return new EditablePoll()
             {
                 Name = Name,
-                Questions = new List<EditableQuestion>(),
+                Questions = new List<EditableQuestion>(Questions.Select(x => x.getEditCopy())),
                 IsPassed = false
             };
         }
