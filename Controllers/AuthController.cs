@@ -79,8 +79,14 @@ namespace QMSL.Controllers
             var Email = credentials.Email;
             var Password = credentials.Password;
             CreatePasswordHash(Password, out byte[] passwordHash);
-            var user = await _dataContext.Doctors.FirstAsync(x => x.Email.Equals(Email)
+            User user = await _dataContext.Doctors.FirstOrDefaultAsync(x => x.Email.Equals(Email)
             && x.Password.SequenceEqual(VerifyPasswordHash(Password)));
+            if(user == null)
+            {
+                user = await _dataContext.Patients.FirstOrDefaultAsync(x => x.Email.Equals(Email)
+            && x.Password.SequenceEqual(VerifyPasswordHash(Password)));
+            }
+              
             string userType = "";
             int countFind = 0;
 
