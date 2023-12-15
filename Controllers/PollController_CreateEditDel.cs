@@ -243,7 +243,7 @@ namespace QMSL.Controllers
         [HttpGet("GetPatientsPoll")]
         public async Task<ActionResult<string>> GetPatientsPoll(int patientId)
         {
-            return Ok(_dataContext.EditablePolls.Include(x => x.Questions).ThenInclude(y => y.EditableAnswers)
+            return Ok(_dataContext.EditablePolls.Include(x => x.Questions).ThenInclude(y => y.EditableAnswers).Include(x=>x.Comments)
                 .Where(z => z.PatientId == patientId));
         }
 
