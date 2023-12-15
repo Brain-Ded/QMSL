@@ -107,9 +107,90 @@ namespace QMSL.Controllers
         public async Task<ActionResult<string>> EditPoll(GeneralPoll poll)
         {
 
-            GeneralPoll generalPoll = await _dataContext.GeneralPolls.FirstAsync(x => x.Id == poll.Id); 
+            GeneralPoll generalPoll = await _dataContext.GeneralPolls.Include(x=>x.Questions)
+                .ThenInclude(y=> y.GeneralAnswers).FirstAsync(x => x.Id == poll.Id);
 
-            
+            generalPoll.Name = poll.Name;
+
+            await _dataContext.SaveChangesAsync();
+
+            List<GeneralQuestion> generalQuestions = _dataContext.GeneralQuestions.Where(x => x.GeneralPollId == poll.Id).ToList();
+
+            if(generalQuestions.Count > poll.Questions.Count)
+            {
+                for(int i=0; i<poll.Questions.Count; i++) 
+                {
+                    generalQuestions[i].Name = poll.Questions[i].Name;
+                }
+
+                generalQuestions.RemoveRange(poll.Questions.Count, generalQuestions.Count - 1);
+            }
+            else if(generalQuestions.Count < poll.Questions.Count)
+            {
+                for (int i = 0; i<generalQuestions.Count; i++)
+                {
+                    generalQuestions[i].Name = poll.Questions[i].Name;
+                }
+
+                for(int i = generalQuestions.Count; i < poll.Questions.Count; ++i)
+                {
+                    _dataContext.GeneralQuestions.Add(new GeneralQuestion()
+                    {
+                        Name = generalQuestions[i].Name,
+                        GeneralPollId = poll.Questions[i].GeneralPollId,
+                    });
+                }
+            }
+            else
+            {
+                for (int i = 0; i<generalQuestions.Count; i++)
+                {
+                    generalQuestions[i].Name = poll.Questions[i].Name;
+                }
+            }
+
+            await _dataContext.SaveChangesAsync();
+
+            generalQuestions = _dataContext.GeneralQuestions.Where(x => x.GeneralPollId == poll.Id).ToList();
+
+            for (int i=0; i<generalQuestions.Count; ++i)
+            {
+                List<GeneralAnswer> answers = _dataContext.GeneralAnswers.Where(x=> x.GeneralQuestionId == generalQuestions[i].Id).ToList();
+
+                if(answers.Count > poll.Questions[i].GeneralAnswers.Count)
+                {
+                    for(int j=0; j<poll.Questions[i].GeneralAnswers.Count; ++j)
+                    {
+                        answers[j] = poll.Questions[i].GeneralAnswers[j];
+                    }
+
+                    answers.RemoveRange(poll.Questions[i].GeneralAnswers.Count, answers.Count - 1);
+
+                }else if(answers.Count < poll.Questions[i].GeneralAnswers.Count)
+                {
+                    for (int j = 0; j<answers.Count; ++j)
+                    {
+                        answers[j] = poll.Questions[i].GeneralAnswers[j];
+                    }
+                    for(int j=answers.Count; j<poll.Questions[i].GeneralAnswers.Count; ++j)
+                    {
+                        _dataContext.GeneralAnswers.Add(new GeneralAnswer()
+                        {
+                            Text = poll.Questions[i].GeneralAnswers[j].Text,
+                            GeneralQuestionId = poll.Questions[i].GeneralAnswers[j].GeneralQuestionId
+                        });
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < poll.Questions[i].GeneralAnswers.Count; ++j)
+                    {
+                        answers[j] = poll.Questions[i].GeneralAnswers[j];
+                    }
+                }
+            }
+
+            await _dataContext.SaveChangesAsync();
 
             generalPoll = _dataContext.GeneralPolls.Include(x => x.Questions).ThenInclude(y=> y.GeneralAnswers).First(z=> z.Id == generalPoll.Id);
 
