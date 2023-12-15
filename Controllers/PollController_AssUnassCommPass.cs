@@ -153,7 +153,7 @@ namespace QMSL.Controllers
             }
 
             var dbPoll = _dataContext.EditablePolls.Include("Comments").First(x => x.Id == pollId);
-            Comment comment = new Comment() { Text = commentDto.Text, DoctorId = commentDto.DoctorId, type = commentDto.Type, CommentedAt = DateTime.Now };
+            Comment comment = new Comment() { Text = commentDto.Text, DoctorId = commentDto.DoctorId, type = commentDto.type, CommentedAt = DateTime.Now };
 
             var commentToAdd = _dataContext.Comments.Add(comment);
             _pollsService.CommentPoll(dbPoll, commentToAdd.Entity);

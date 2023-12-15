@@ -4,8 +4,9 @@ namespace QMSL.Dtos
 {
     public class CommentDto
     {
-        public string Text { get; set; }
         public int DoctorId { get; set; }
-        public CommentTypes Type { get; set; }
+        public string Text { get; set; }
+        public CommentTypes type { get; set; }
+        public DateTime CommentedAt { get; set; }
     }
 }

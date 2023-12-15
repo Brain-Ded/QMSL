@@ -103,6 +103,100 @@ namespace QMSL.Controllers
             return Ok(generalPoll);
         }
 
+        [HttpPost("CreateEditPoll")]
+        public async Task<ActionResult<string>> CreatePoll(EditablePollDto poll)
+        {
+            if (!await _dataContext.Patients.AnyAsync(x => x.Email.Equals(poll.patientEmail)))
+            {
+                return BadRequest("Doctor with this email does not exist");
+            }
+
+            Patient patient = await _dataContext.Patients.FirstAsync(x => x.Email.Equals(poll.patientEmail));
+
+            if (patient == null)
+            {
+                return BadRequest("Patient with this email doesn't exist");
+            }
+
+            foreach(EditableQuestionDto question in poll.Questions)
+            {
+                if (AuthVerifier.TextVerification(question.Name))
+                {
+                    return BadRequest("Bad question name");
+                }
+            }
+
+            EditablePoll editablePoll = new EditablePoll()
+            {
+                Name = poll.Name,
+                PatientId = patient.Id,
+                AssignedAt = poll.AssignedAt,
+                PassedAt = poll.PassedAt,
+                IsPassed = poll.IsPassed,
+            };
+
+            _dataContext.EditablePolls.Add(editablePoll);
+            await _dataContext.SaveChangesAsync();
+
+            editablePoll = await _dataContext.EditablePolls
+                .FirstAsync(x => x.PatientId == patient.Id && x.Name.Equals(poll.Name));
+
+            List<EditableQuestion> questions = new List<EditableQuestion>();
+            List<Comment> comments = new List<Comment>();
+
+            for(int i=0; i<poll.Questions.Count; i++)
+            {
+                questions.Add(new EditableQuestion()
+                {
+                    Name= poll.Questions[i].Name,
+                    ChoosenAnswer = poll.Questions[i].ChoosenAnswer,
+                    EditablePollId = editablePoll.Id,
+                });
+            }
+
+            _dataContext.EditableQuestions.AddRange(questions);
+            await _dataContext.SaveChangesAsync();
+
+            for(int i=0; i< poll.Comments.Count; i++)
+            {
+                comments.Add(new Comment()
+                {
+                    DoctorId = poll.Comments[i].DoctorId,
+                    CommentedAt = poll.Comments[i].CommentedAt,
+                    EditablePollId=editablePoll.Id,
+                    Text = poll.Comments[i].Text,
+                    type = poll.Comments[i].type
+                });
+            }
+
+            _dataContext.Comments.AddRange(comments);
+            await _dataContext.SaveChangesAsync();
+
+            List<EditableQuestion> editableQuestions = _dataContext.EditableQuestions
+                .Where(x => x.EditablePollId == editablePoll.Id).ToList();
+
+            for(int i=0; i<editableQuestions.Count; ++i)
+            {
+                for(int j=0; j<poll.Questions.Count; ++j)
+                {
+                    if (AuthVerifier.TextVerification(poll.Questions[i].EditableAnswers[j].Text))
+                    {
+                        return BadRequest("Bad answer text");
+                    }
+
+                    _dataContext.EditableAnswers.Add(new EditableAnswer()
+                    {
+                        EditableQuestionId = editableQuestions[i].Id,
+                        Text = poll.Questions[i].EditableAnswers[j].Text
+                    });
+                }
+            }
+
+            await _dataContext.SaveChangesAsync();
+
+            return Ok(_dataContext.EditablePolls.Include(x=>x.Questions).ThenInclude(y=> y.EditableAnswers).Where(z=> z.Id == editablePoll.Id));
+        }
+
         [HttpPost("EditPoll")]
         public async Task<ActionResult<string>> EditPoll(GeneralPoll poll)
         {
