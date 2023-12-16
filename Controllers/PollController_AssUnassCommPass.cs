@@ -66,7 +66,7 @@ namespace QMSL.Controllers
             }
 
             var patient = _dataContext.Patients.Include("Polls").First(x => x.Email == patientEmail);
-            var poll = _dataContext.EditablePolls.First(x => x.Name == pollName);
+            var poll = _dataContext.EditablePolls.Include(x=>x.Questions).ThenInclude(y=>y.EditableAnswers).First(x => x.Name == pollName && x.PatientId == patient.Id);
 
             if (!patient.Polls.Any(x => x.Name == poll.Name))
             {
