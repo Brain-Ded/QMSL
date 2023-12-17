@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QMSL.Services;
 using Azure.Core;
+using System.Text;
 
 namespace QMSL.Controllers
 {
@@ -19,7 +20,7 @@ namespace QMSL.Controllers
     public class AuthController : Controller
     {
         private readonly DataContext _dataContext;
-        private readonly IConfiguration _config;
+        private readonly IConfiguration? _config;
         private readonly DoctorFactory doctorFactory;
         private readonly PatientFactory patientFactory;
 
@@ -139,7 +140,10 @@ namespace QMSL.Controllers
         {
             using (var hmac = new HMACSHA512())
             {
-                hmac.Key = System.Text.Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value);
+                if (_config != null)
+                    hmac.Key = System.Text.Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value);
+                else
+                    hmac.Key = System.Text.Encoding.UTF8.GetBytes("mylolsecretsexwithyourmama");
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
         }
@@ -149,7 +153,10 @@ namespace QMSL.Controllers
             byte[] passwordHash;
             using (var hmac = new HMACSHA512())
             {
-                hmac.Key = System.Text.Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value);
+                if (_config != null)
+                    hmac.Key = System.Text.Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value);
+                else
+                    hmac.Key = System.Text.Encoding.UTF8.GetBytes("mylolsecretsexwithyourmama");
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
 

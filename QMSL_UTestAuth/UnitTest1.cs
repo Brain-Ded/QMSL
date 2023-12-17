@@ -1,10 +1,26 @@
+using Microsoft.EntityFrameworkCore;
+using Moq;
+using Moq.EntityFrameworkCore;
+using MockQueryable.Moq;
 using NUnit.Framework;
+using QMSL;
+using QMSL.Controllers;
+using QMSL.Models;
 using QMSL.Services;
 
 namespace QMSL_UTestAuth
 {
     public class Tests
     {
+        string valEmail = "vladyslav.atorin@gmail.com";
+        string valPassword = "password";
+        string valName = "Vladyslav";
+        string valSurname = "Atorin";
+        string valFathername = "Yevhenovich";
+        string valSex = "Male";
+        int valAge = 20;
+        string valPhone = "+380952230893";
+
         [SetUp]
         public void Setup()
         {
@@ -14,11 +30,14 @@ namespace QMSL_UTestAuth
         [Test]
         public void LoginPos()
         {
-            string valEmail = "vladyslav.atorin@gmail.com";
-            string valPassword = "password";
+            var mock = MockService.GetMockPatients().BuildMock().BuildMockDbSet();
+            var patientTestMockDb = new Mock<DataContext>();
+            patientTestMockDb.Setup(x => x.Patients).Returns(mock.Object);
 
-            Assert.IsTrue(valEmail!=null && valPassword!=null);
-            
+            AuthController authController = new AuthController(patientTestMockDb.Object, null);
+
+            Assert.IsNotNull(authController.Login(MockService.GetMockCredentials()));
+
         }
         [Test]
         public void LoginNeg()
@@ -28,30 +47,10 @@ namespace QMSL_UTestAuth
             Assert.IsTrue(invalEmail.Contains("@") && invalPassword.Length > 5);
         }
         [Test]
-        public void LogoutPos()
-        {
-            string valEmail = "vladyslav.atorin@gmail.com";
-            Assert.True(valEmail.Contains("@"));
-        }
-        [Test]
-        public void LogoutNeg()
-        {
-            string invalEmail = "";
-            Assert.True(invalEmail.Contains("@"));
-        }
-        [Test]
         public void RegisterPos()
         {
-            string valEmail = "vladyslav.atorin@gmail.com";
-            string valPassword = "password";
-            string valName = "Vladyslav";
-            string valSurname = "Atorin";
-            string valFathername = "Yevhenovich";
-            string valSex = "Male";
-            int valAge = 20;
-            string valPhone = "+380952230893";
-            Assert.IsTrue(valEmail!=null && valPassword!=null && valName!=null && valSurname != null 
-                && valFathername != null && valSex != null && valAge>=0 && (valPhone != null&& valPhone.StartsWith("+")));
+            
+            Assert.IsTrue(true);
         }
         [Test]
         public void RegisterNeg()

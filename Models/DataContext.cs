@@ -22,16 +22,17 @@ namespace QMSL
         //        PhoneNumber = "+1234567890",
         //    });
         //}
+        public DataContext() : base() { }
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<Doctor> Doctors { get; set; }
-        public DbSet<Patient> Patients { get; set; }
-        public DbSet<GeneralPoll> GeneralPolls { get; set; }
-        public DbSet<EditablePoll> EditablePolls { get; set; }
-        public DbSet<GeneralQuestion> GeneralQuestions { get; set; }
-        public DbSet<EditableQuestion> EditableQuestions { get; set; }
-        public DbSet<GeneralAnswer> GeneralAnswers { get; set; }
-        public DbSet<EditableAnswer> EditableAnswers { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<Doctor> Doctors { get; set; }
+        public virtual DbSet<Patient> Patients { get; set; }
+        public virtual DbSet<GeneralPoll> GeneralPolls { get; set; }
+        public virtual DbSet<EditablePoll> EditablePolls { get; set; }
+        public virtual DbSet<GeneralQuestion> GeneralQuestions { get; set; }
+        public virtual DbSet<EditableQuestion> EditableQuestions { get; set; }
+        public virtual DbSet<GeneralAnswer> GeneralAnswers { get; set; }
+        public virtual DbSet<EditableAnswer> EditableAnswers { get; set; }
     }
 }
