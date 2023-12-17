@@ -9,6 +9,7 @@ using QMSL.Models;
 using QMSL.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QMSL.Dtos;
 
 namespace QMSL_UTestAuth
 {
@@ -59,28 +60,60 @@ namespace QMSL_UTestAuth
         [Test]
         public void RegisterPos()
         {
-            
-            Assert.IsTrue(true);
+            var testMockDb = new Mock<DataContext>();
+
+            var mock = MockService.GetMockPatients().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.Patients).Returns(mock.Object);
+
+            var mock2 = MockService.GetMockDoctors().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.Doctors).Returns(mock2.Object);
+
+            AuthController authController = new AuthController(testMockDb.Object, null);
+
+            UserDto userDto = new UserDto()
+            {
+                Name = "test",
+                Surname = "test",
+                Email = "test@gmail.com",
+                Password = "123456789qwerty",
+                Age = 18,
+                Sex = "Male",
+                PhoneNumber = "+1234"
+            };
+            var test = authController.Register(userDto, true);
+            Assert.IsTrue(test.Result.Result is OkObjectResult);
         }
         [Test]
         public void RegisterNeg()
         {
-            string invalEmail = "";
-            string invalPassword = "";
-            string invalName = "";
-            string invalSurname = "Atorin";
-            string invalFathername = "Yevhenovich";
-            string invalSex = "Male";
-            int invalAge = -20;
-            string invalPhone = "324234";
-            Assert.IsTrue(invalEmail!=null && invalPassword!=null && invalName!=null && invalSurname != null
-                && invalFathername != null && invalSex != null && invalAge>=0 && invalPhone != null);
+            var testMockDb = new Mock<DataContext>();
+
+            var mock = MockService.GetMockPatients().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.Patients).Returns(mock.Object);
+
+            var mock2 = MockService.GetMockDoctors().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.Doctors).Returns(mock2.Object);
+
+            AuthController authController = new AuthController(testMockDb.Object, null);
+
+            UserDto userDto = new UserDto()
+            {
+                Name = "test",
+                Surname = "test",
+                Email = "test@gmail.com",
+                Password = "123456789qwerty",
+                Age = 18,
+                Sex = "Male",
+                PhoneNumber = "1234"
+            };
+            var test = authController.Register(userDto, true);
+            Assert.IsTrue(test.Result.Result is BadRequestObjectResult);
         }
 
         [Test]
         public void TestVerificationText()
         {
-            Assert.IsTrue(AuthVerifier.TextVerification("Sex"));
+            Assert.IsTrue(AuthVerifier.TextVerification("Se#x"));
         }
     }
 }
