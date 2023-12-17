@@ -177,7 +177,7 @@ namespace QMSL.Controllers
 
             for(int i=0; i<editableQuestions.Count; ++i)
             {
-                for(int j=0; j<poll.Questions.Count; ++j)
+                for(int j=0; j < poll.Questions[i].EditableAnswers.Count; ++j)
                 {
                     if (AuthVerifier.TextVerification(poll.Questions[i].EditableAnswers[j].Text))
                     {
@@ -337,8 +337,11 @@ namespace QMSL.Controllers
         [HttpGet("GetPatientsPoll")]
         public async Task<ActionResult<string>> GetPatientsPoll(int patientId)
         {
+            var pollsWithEmails = _dataContext.EditablePolls.Join(_dataContext.Patients, a => a.PatientId, b => b.Id, 
+                (poll, patient) => new { poll, patient = patient.Email });
             return Ok(_dataContext.EditablePolls.Include(x => x.Questions).ThenInclude(y => y.EditableAnswers).Include(x=>x.Comments)
-                .Where(z => z.PatientId == patientId));
+               .Join(_dataContext.Patients, a => a.PatientId, b => b.Id,
+                (poll, patient) => new { poll, patient = patient.Email }).Where(z => z.poll.PatientId == patientId));
         }
 
 
