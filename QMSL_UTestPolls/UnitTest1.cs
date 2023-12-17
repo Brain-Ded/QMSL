@@ -13,16 +13,16 @@ namespace QMSL_UTestPolls
         }
 
         [Test]
-        public void GetEditCopy_PositiveTest()
+        [TestCase(1)]
+        public void GetEditCopy_PositiveTest(int id)
         {
-            
-            int validPollId = 1; 
-            Assert.DoesNotThrow(() =>
+            GeneralPoll poll = new GeneralPoll()
             {
-                var result = pollInstance.GetEditCopy(validPollId);
-                Assert.IsNotNull(result);
-                
-            });
+                Id = id,
+                Name = "Test",
+            };
+            var test = poll.getEditCopy();
+            Assert.IsNotNull(test);
         }
         [Test]
         public void GetEditCopy_NegativeTest()
@@ -35,16 +35,17 @@ namespace QMSL_UTestPolls
             });
         }
         [Test]
-        public void GetEditQuestion_PositiveTest()
+        [TestCase(1)]
+        public void GetEditQuestion_PositiveTest(int id)
         {
-            
-            int validQuestionId = 1; 
-            Assert.DoesNotThrow(() =>
+            GeneralQuestion question = new GeneralQuestion()
             {
-                var result = pollInstance.GetEditQuestion(validQuestionId);
-                Assert.IsNotNull(result);
-                
-            });
+                Id = id,
+                GeneralAnswers = new List<GeneralAnswer>(),
+                Name = "Test",
+            };
+            var test = question.getEditCopy();
+            Assert.IsNotNull(test);
         }
 
         [Test]
@@ -68,13 +69,12 @@ namespace QMSL_UTestPolls
         }
 
         [Test]
-        public void PassPoll_NegativeTest()
+        public void PassPoll()
         {
-            EditablePoll poll = null;
-            Assert.Throws<NotImplementedException>(() =>
-            {
-                pollInstance.PassPoll(poll);
-            });
+            EditablePoll editablePoll = new EditablePoll();
+            pollInstance.PassPoll(editablePoll);
+
+            Assert.IsTrue(editablePoll.IsPassed);
         }
     }
 }
