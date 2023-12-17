@@ -118,6 +118,7 @@ namespace QMSL.Controllers
         }
         private string CreateToken(User user, string Role)
         {
+            SymmetricSecurityKey key;
             List<Claim> claim = new List<Claim>
             {
                 new Claim("id", user.Id.ToString()),
@@ -126,7 +127,10 @@ namespace QMSL.Controllers
                 new Claim("role", Role)
             };
 
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+            if(_config != null)
+                key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+            else
+                key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("mylolsecretsexwithyourmama"));
 
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 

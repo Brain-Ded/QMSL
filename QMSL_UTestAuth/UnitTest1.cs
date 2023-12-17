@@ -7,19 +7,13 @@ using QMSL;
 using QMSL.Controllers;
 using QMSL.Models;
 using QMSL.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace QMSL_UTestAuth
 {
     public class Tests
     {
-        string valEmail = "vladyslav.atorin@gmail.com";
-        string valPassword = "password";
-        string valName = "Vladyslav";
-        string valSurname = "Atorin";
-        string valFathername = "Yevhenovich";
-        string valSex = "Male";
-        int valAge = 20;
-        string valPhone = "+380952230893";
 
         [SetUp]
         public void Setup()
@@ -30,9 +24,14 @@ namespace QMSL_UTestAuth
         [Test]
         public void LoginPos()
         {
-            var mock = MockService.GetMockPatients().BuildMock().BuildMockDbSet();
             var patientTestMockDb = new Mock<DataContext>();
+
+            var mock = MockService.GetMockPatients().BuildMock().BuildMockDbSet();
             patientTestMockDb.Setup(x => x.Patients).Returns(mock.Object);
+
+
+            var mock2 = MockService.GetMockDoctors().BuildMock().BuildMockDbSet();
+            patientTestMockDb.Setup(x => x.Doctors).Returns(mock2.Object);
 
             AuthController authController = new AuthController(patientTestMockDb.Object, null);
 
@@ -42,9 +41,20 @@ namespace QMSL_UTestAuth
         [Test]
         public void LoginNeg()
         {
-            string invalEmail = "";
-            string invalPassword = "";
-            Assert.IsTrue(invalEmail.Contains("@") && invalPassword.Length > 5);
+            var patientTestMockDb = new Mock<DataContext>();
+
+            var mock = MockService.GetBadMockPatients().BuildMock().BuildMockDbSet();
+            patientTestMockDb.Setup(x => x.Patients).Returns(mock.Object);
+
+
+            var mock2 = MockService.GetBadMockDoctors().BuildMock().BuildMockDbSet();
+            patientTestMockDb.Setup(x => x.Doctors).Returns(mock2.Object);
+
+            AuthController authController = new AuthController(patientTestMockDb.Object, null);
+
+            var test = authController.Login(MockService.GetMockCredentials());
+
+            Assert.IsTrue(test.Result.Result is BadRequestObjectResult);
         }
         [Test]
         public void RegisterPos()
