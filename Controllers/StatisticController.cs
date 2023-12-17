@@ -10,7 +10,7 @@ namespace QMSL.Controllers
     public class StatisticController : Controller
     {
         private readonly DataContext _dataContext;
-        private readonly IConfiguration _config;
+        private readonly IConfiguration? _config;
 
         public StatisticController(DataContext dataContext, IConfiguration config)
         {
@@ -26,7 +26,7 @@ namespace QMSL.Controllers
                 return BadRequest("Patient with this id is not exists");
             }
 
-            var patient = _dataContext.Patients.Include("Polls").First(x => x.Id == patientId);
+            var patient = _dataContext.Patients.Include(x => x.Polls).First(x => x.Id == patientId);
             StatisticDto statistic = new StatisticDto();
             statistic.TotalPollAmount = patient.Polls.Count;
             statistic.PassedPollAmount = patient.Polls.Where(x => x.IsPassed).Count();

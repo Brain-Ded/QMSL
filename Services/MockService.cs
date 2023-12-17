@@ -24,7 +24,7 @@ namespace QMSL.Services
                 },
                 new Patient()
                 {
-                    Id = 1,
+                    Id = 2,
                     Name = "Foor",
                     Surname = "Barb",
                     Fathername = "Rabe",
@@ -89,7 +89,7 @@ namespace QMSL.Services
                 },
                 new Doctor()
                 {
-                    Id = 1,
+                    Id = 2,
                     Name = "Foor",
                     Surname = "Barb",
                     Fathername = "Rabe",
@@ -213,7 +213,7 @@ namespace QMSL.Services
                     Id = 1,
                     Name = "test",
                     Questions = new List<EditableQuestion>(),
-                    AssignedAt = DateTime.Now
+                    AssignedAt = DateTime.Now,
                 },
                 new EditablePoll()
                 {
@@ -221,6 +221,56 @@ namespace QMSL.Services
                     Name = "test1",
                     Questions = new List<EditableQuestion>(),
                     AssignedAt = DateTime.Now
+                },
+            };
+        }
+        public static List<EditablePoll> GetEditablePollsForPatients()
+        {
+            return new List<EditablePoll>()
+            {
+                new EditablePoll()
+                {
+                    Id = 1,
+                    Name = "test",
+                    Questions = new List<EditableQuestion>(),
+                    AssignedAt = DateTime.Now,
+                    IsPassed = false,
+                    PatientId = 1,
+                },
+                new EditablePoll()
+                {
+                    Id = 2,
+                    Name = "test1",
+                    Questions = new List<EditableQuestion>(),
+                    AssignedAt = DateTime.Now,
+                    PatientId = 1,
+                    IsPassed = true,
+                    PassedAt = DateTime.Now.AddDays(2),
+                },
+            };
+        }
+        public static List<EditablePoll> GetEditablePollsForPatients2()
+        {
+            return new List<EditablePoll>()
+            {
+                new EditablePoll()
+                {
+                    Id = 1,
+                    Name = "test",
+                    Questions = new List<EditableQuestion>(),
+                    AssignedAt = DateTime.Now,
+                    IsPassed = false,
+                    PatientId = 1,
+                },
+                new EditablePoll()
+                {
+                    Id = 2,
+                    Name = "test1",
+                    Questions = new List<EditableQuestion>(),
+                    AssignedAt = DateTime.Now,
+                    PatientId = 2,
+                    IsPassed = true,
+                    PassedAt = DateTime.Now.AddDays(2),
                 },
             };
         }
@@ -239,6 +289,26 @@ namespace QMSL.Services
                     Id = 2,
                     Name = "test1",
                     Questions = new List<GeneralQuestion>()
+                },
+            };
+        }
+        public static List<GeneralPoll> GetGeneralPollsForDoctors()
+        {
+            return new List<GeneralPoll>()
+            {
+                new GeneralPoll()
+                {
+                    Id = 1,
+                    Name = "test",
+                    Questions = new List<GeneralQuestion>(),
+                    DoctorId = 1,
+                },
+                new GeneralPoll()
+                {
+                    Id = 2,
+                    Name = "test1",
+                    Questions = new List<GeneralQuestion>(),
+                    DoctorId = 1,
                 },
             };
         }
