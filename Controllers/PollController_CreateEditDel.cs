@@ -255,7 +255,8 @@ namespace QMSL.Controllers
                 {
                     for(int j=0; j<poll.Questions[i].GeneralAnswers.Count; ++j)
                     {
-                        answers[j] = poll.Questions[i].GeneralAnswers[j];
+                        answers[j].Text = poll.Questions[i].GeneralAnswers[j].Text;
+                        answers[j].GeneralQuestionId = generalQuestions[i].Id;
                     }
 
                     answers.RemoveRange(poll.Questions[i].GeneralAnswers.Count, answers.Count - 1);
@@ -264,7 +265,8 @@ namespace QMSL.Controllers
                 {
                     for (int j = 0; j<answers.Count; ++j)
                     {
-                        answers[j] = poll.Questions[i].GeneralAnswers[j];
+                        answers[j].Text = poll.Questions[i].GeneralAnswers[j].Text;
+                        answers[j].GeneralQuestionId = generalQuestions[i].Id;
                     }
                     for(int j=answers.Count; j<poll.Questions[i].GeneralAnswers.Count; ++j)
                     {
@@ -279,7 +281,8 @@ namespace QMSL.Controllers
                 {
                     for (int j = 0; j < poll.Questions[i].GeneralAnswers.Count; ++j)
                     {
-                        answers[j] = poll.Questions[i].GeneralAnswers[j];
+                        answers[j].Text = poll.Questions[i].GeneralAnswers[j].Text;
+                        answers[j].GeneralQuestionId = generalQuestions[i].Id;
                     }
                 }
             }
