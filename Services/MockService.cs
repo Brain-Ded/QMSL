@@ -242,5 +242,43 @@ namespace QMSL.Services
                 },
             };
         }
+        public static List<GeneralQuestion> GetGeneralQuestions()
+        {
+            return new List<GeneralQuestion>()
+            {
+                new GeneralQuestion()
+                {
+                    Id = 1,
+                    Name = "test",
+                    GeneralAnswers = new List<GeneralAnswer>(),
+                    GeneralPollId = 1
+                },
+                new GeneralQuestion()
+                {
+                    Id = 2,
+                    Name = "test1",
+                    GeneralAnswers = new List<GeneralAnswer>(),
+                    GeneralPollId = 2
+                },
+            };
+        }
+        public static List<GeneralAnswer> GetGeneralAnswers()
+        {
+            return new List<GeneralAnswer>()
+            {
+                new GeneralAnswer()
+                {
+                    Id = 1,
+                    Text = "test",
+                    GeneralQuestionId = 1
+                },
+                new GeneralAnswer()
+                {
+                    Id = 2,
+                    Text = "test1",
+                    GeneralQuestionId = 2
+                },
+            };
+        }
     }
 }

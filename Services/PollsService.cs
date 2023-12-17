@@ -18,8 +18,6 @@ namespace QMSL.Services
         {
             throw new NotImplementedException();
         }
-        //Vlad
-        public void DeletePoll(int id) { throw new NotImplementedException(); }
         //Nazar
         public Patient AssignPoll(Patient patient, EditablePoll poll) 
         {

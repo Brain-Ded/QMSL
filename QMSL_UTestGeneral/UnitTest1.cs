@@ -1,5 +1,13 @@
+using Microsoft.AspNetCore.Mvc;
+using MockQueryable.Moq;
+using Moq;
+using QMSL.Controllers;
+using QMSL;
 using QMSL.Models;
 using QMSL.Services;
+using NuGet.Frameworks;
+using Microsoft.EntityFrameworkCore;
+using QMSL.Dtos;
 
 namespace QMSL_UTestGeneral
 {
@@ -25,58 +33,95 @@ namespace QMSL_UTestGeneral
         }
 
         [Test]
-        [TestCase(null)]
-        [TestCase("TestName")]
-        public void CreatePoll_InvalidNameOrQuestionListIsEmptyOrNull_ThrowsArgumentNullException(string name)
+        [TestCase("test", "doctor@gmail.com")]
+        [TestCase("ValidPollName", "InvalidDoctorEmail")]
+        public void CreatePoll_InvalidNameOrDoctorEmail_ReturnsBadRequest(string name, string doctorEmail)
         {
-            List<GeneralQuestion> questions = null;
-            if(name == null)
-                questions = new List<GeneralQuestion>() { new GeneralQuestion() };
+            var testMockDb = new Mock<DataContext>();
 
-            Assert.Throws(Is.TypeOf<ArgumentNullException>()
-                .And.Property("Questions").Not.Contain(_GeneralQuestion),
-                () => _PollsService.CreatePoll(name, questions));
+            var mock = MockService.GetGeneralPolls().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.GeneralPolls).Returns(mock.Object);
+
+            var mock1 = MockService.GetMockDoctors().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.Doctors).Returns(mock1.Object);
+
+            PollController_CreateEditDel controller = new PollController_CreateEditDel(testMockDb.Object, null);
+
+            PollDto testPoll = new PollDto() { Name = name, DoctorEmail = doctorEmail };
+            var test = controller.CreatePoll(testPoll);
+
+            Assert.That(test.Result.Result, Is.TypeOf<BadRequestObjectResult>());
         }
 
         [Test]
         public void EditPoll_ValidIdAndEditedPoll_EditsPoll()
         {
-            GeneralPoll poll = new GeneralPoll() { Id = 2, Name = "TEST" };
-            var result = _PollsService.EditPoll(_GeneralPoll.Id, poll);
-            Assert.That(result, Is.Not.Null.And.Property("Name").Not.Contain(_GeneralPoll)
-                .Or.Property("Questions").Not.Contain(_GeneralPoll));
+            var testMockDb = new Mock<DataContext>();
+
+            var mock = MockService.GetGeneralPolls().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.GeneralPolls).Returns(mock.Object);
+            
+            var mock1 = MockService.GetGeneralQuestions().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.GeneralQuestions).Returns(mock1.Object);
+
+            var mock2 = MockService.GetGeneralAnswers().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.GeneralAnswers).Returns(mock2.Object);
+
+            PollController_CreateEditDel controller = new PollController_CreateEditDel(testMockDb.Object, null);
+
+            var testPoll = MockService.GetGeneralPolls()[0];
+            testPoll.Questions.Add(MockService.GetGeneralQuestions().First());
+            var test = controller.EditPoll(testPoll);
+
+            Assert.That(test.Result.Result, Is.TypeOf<OkObjectResult>());
         }
 
         [Test]
         [TestCase(-1)]
+        public void EditPoll_InvalidIdOrEditedPollIsNull_FailsThread(int id)
+        {
+            var testMockDb = new Mock<DataContext>();
+
+            var mock = MockService.GetGeneralPolls().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.GeneralPolls).Returns(mock.Object);
+
+            PollController_CreateEditDel controller = new PollController_CreateEditDel(testMockDb.Object, null);
+
+            var test = controller.EditPoll(new GeneralPoll { Id = id });
+
+            Assert.IsTrue(test.Status == TaskStatus.Faulted);
+        }
+
+        [Test]
         [TestCase(1)]
-        public void EditPoll_InvalidIdOrEditedPollIsNull_ThrowsArgumentNullException(int id)
+        public void DeletePoll_ValidId_DeletesPoll(int id)
         {
-            GeneralPoll poll = null;
-            if (id == -1)
-                poll = new GeneralPoll();
+            var testMockDb = new Mock<DataContext>();
 
-            Assert.Throws(Is.TypeOf<ArgumentNullException>(),
-                () => _PollsService.EditPoll(id, poll));
-        }
+            var mock = MockService.GetGeneralPolls().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.GeneralPolls).Returns(mock.Object);
 
-        [Test]
-        public void DeletePoll_ValidId_DeletesPoll()
-        {
-            int id = 1;
-            GeneralPoll poll = new GeneralPoll() { Id = id };
+            PollController_CreateEditDel controller = new PollController_CreateEditDel(testMockDb.Object, null);
 
-            _PollsService.DeletePoll(id);
-            Assert.That(poll.Id, Is.EqualTo(id));
+            var test = controller.DeletePoll(id);
+
+            Assert.That(test.Result.Result, Is.TypeOf<OkObjectResult>());
         }
 
         [Test]
         [TestCase(-1)]
-        public void DeletePoll_InvalidId_ThrowsArgumentException(int id)
+        public void DeletePoll_InvalidId_FailsThread(int id)
         {
-            _PollsService.DeletePoll(id);
-            Assert.Throws(Is.TypeOf<ArgumentException>(),
-                () => _PollsService.DeletePoll(id));
+            var testMockDb = new Mock<DataContext>();
+
+            var mock = MockService.GetGeneralPolls().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.GeneralPolls).Returns(mock.Object);
+
+            PollController_CreateEditDel controller = new PollController_CreateEditDel(testMockDb.Object, null);
+
+            var test = controller.DeletePoll(id);
+
+            Assert.IsTrue(test.Status == TaskStatus.Faulted);
         }
     }
 }
