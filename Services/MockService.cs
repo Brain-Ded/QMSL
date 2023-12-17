@@ -204,5 +204,43 @@ namespace QMSL.Services
                 Password = "string",
             };
         }
+        public static List<EditablePoll> GetEditablePolls()
+        {
+            return new List<EditablePoll>()
+            {
+                new EditablePoll()
+                {
+                    Id = 1,
+                    Name = "test",
+                    Questions = new List<EditableQuestion>(),
+                    AssignedAt = DateTime.Now
+                },
+                new EditablePoll()
+                {
+                    Id = 2,
+                    Name = "test1",
+                    Questions = new List<EditableQuestion>(),
+                    AssignedAt = DateTime.Now
+                },
+            };
+        }
+        public static List<GeneralPoll> GetGeneralPolls()
+        {
+            return new List<GeneralPoll>()
+            {
+                new GeneralPoll()
+                {
+                    Id = 1,
+                    Name = "test",
+                    Questions = new List<GeneralQuestion>(),
+                },
+                new GeneralPoll()
+                {
+                    Id = 2,
+                    Name = "test1",
+                    Questions = new List<GeneralQuestion>()
+                },
+            };
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using QMSL.Models;
+﻿using Microsoft.IdentityModel.Tokens;
+using QMSL.Models;
 
 namespace QMSL.Services
 {
@@ -55,6 +56,9 @@ namespace QMSL.Services
         { 
             if(poll == null || comment == null)
                 throw new ArgumentNullException();
+
+            if (comment.Text.IsNullOrEmpty())
+                throw new ArgumentException();
 
             if(poll.Comments == null)
                 poll.Comments = new List<Comment>();

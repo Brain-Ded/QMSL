@@ -1,3 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
+using MockQueryable.Moq;
+using Moq;
+using QMSL;
+using QMSL.Controllers;
 using QMSL.Enums;
 using QMSL.Models;
 using QMSL.Services;
@@ -50,16 +55,23 @@ namespace QMSL_UTestCommunication
         }
 
         [Test]
-        [TestCase(-1, 1)]
-        [TestCase(1, -1)]
-        public void AssignPoll_InvalidPatientIdOrPollId_ThrowsArgumentOutOfRangeException(int patientId, int pollId)
+        [TestCase("InvalidEmail", "test")]
+        [TestCase("patient@gmail.com", "InvalidPollName")]
+        public void AssignPoll_InvalidPatientEmailOrPollName_ReturnsBadRequest(string patientEmail, string pollName)
         {
-            Patient patient = new Patient() { Id = patientId };
-            EditablePoll poll = new EditablePoll() { Id = pollId };
+            var testMockDb = new Mock<DataContext>();
 
-            Assert.Throws(Is.TypeOf<ArgumentOutOfRangeException>()
-                .And.Property("Polls").Not.Contain(_editablePoll),
-            () => _pollsService.AssignPoll(patient, poll));
+            var mock = MockService.GetMockPatients().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.Patients).Returns(mock.Object);
+
+            var mock1 = MockService.GetGeneralPolls().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.GeneralPolls).Returns(mock1.Object);
+
+            PollController_AssUnassCommPass controller = new PollController_AssUnassCommPass(testMockDb.Object, null);
+
+            var test = controller.AssignPoll(pollName, patientEmail);
+
+            Assert.That(test.Result.Result, Is.TypeOf<BadRequestObjectResult>());
         }
 
         [Test]
@@ -71,14 +83,23 @@ namespace QMSL_UTestCommunication
         }
 
         [Test]
-        [TestCase(-1, 1)]
-        [TestCase(1, -1)]
-        public void UnassignPoll_InvalidPatientIdOrPollId_ThrowsArgumentOutOfRangeException(int patientId, int pollId)
+        [TestCase("InvalidPatientEmail", "test")]
+        [TestCase("patient@gmail.com", "InvalidPollName")]
+        public void UnassignPoll_InvalidPatientEmailOrPollName_ThrowsArgumentOutOfRangeException(string patientEmail, string pollName)
         {
-            Patient patient = new Patient() { Id = patientId };
+            var testMockDb = new Mock<DataContext>();
 
-            Assert.Throws(Is.TypeOf<ArgumentOutOfRangeException>(),
-            () => _pollsService.UnassignPoll(patient, pollId));
+            var mock = MockService.GetMockPatients().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.Patients).Returns(mock.Object);
+
+            var mock1 = MockService.GetEditablePolls().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.EditablePolls).Returns(mock1.Object);
+
+            PollController_AssUnassCommPass controller = new PollController_AssUnassCommPass(testMockDb.Object, null);
+
+            var test = controller.UnassignPoll(pollName, patientEmail);
+
+            Assert.That(test.Result.Result, Is.TypeOf<BadRequestObjectResult>());
         }
 
         [Test]
@@ -92,13 +113,18 @@ namespace QMSL_UTestCommunication
 
         [Test]
         [TestCase(-1)]
-        public void CommentPoll_InvalidPollId_ThrowsArgumentOutOfRangeException(int pollId)
+        public void CommentPoll_InvalidPollId_ReturnsBadRequest(int pollId)
         {
-            EditablePoll poll = new EditablePoll() { Id = pollId };
+            var testMockDb = new Mock<DataContext>();
 
-            var _comment = GetComment();
-            Assert.Throws(Is.TypeOf<ArgumentOutOfRangeException>(),
-            () => _pollsService.CommentPoll(poll, _comment));
+            var mock = MockService.GetEditablePolls().BuildMock().BuildMockDbSet();
+            testMockDb.Setup(x => x.EditablePolls).Returns(mock.Object);
+
+            PollController_AssUnassCommPass controller = new PollController_AssUnassCommPass(testMockDb.Object, null);
+
+            var test = controller.CommentPoll(pollId, new QMSL.Dtos.CommentDto());
+
+            Assert.IsTrue(test.Result.Result is BadRequestObjectResult);
         }
 
         [Test]
