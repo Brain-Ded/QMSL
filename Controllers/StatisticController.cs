@@ -64,8 +64,8 @@ namespace QMSL.Controllers
             StatisticDto statistic = new StatisticDto();
             doctor.Polls.ForEach(x =>
             {
-                statistic.TotalPollAmount = _dataContext.Patients.Include("Polls").Where(y => y.Polls.Any(z => z.Name == x.Name)).Count();
-                statistic.PassedPollAmount = _dataContext.Patients.Include("Polls").Where(y => y.Polls.Any(z => z.Name == x.Name && z.IsPassed)).Count();
+                statistic.TotalPollAmount = _dataContext.Patients.Include("Polls").Include("Doctors").Where(y => y.Doctors.Any(z => z.Id == doctorId) && y.Polls.Any(z => z.Name == x.Name)).Count();
+                statistic.PassedPollAmount = _dataContext.Patients.Include("Polls").Include("Doctors").Where(y => y.Doctors.Any(z => z.Id == doctorId) && y.Polls.Any(z => z.Name == x.Name && z.IsPassed)).Count();
                 statistic.NotPassedPollAmount = statistic.TotalPollAmount - statistic.PassedPollAmount;
             });
 
@@ -84,8 +84,8 @@ namespace QMSL.Controllers
             StatisticDto statistic = new StatisticDto();
             doctor.Polls.ForEach(x =>
             {
-                statistic.TotalPollAmount = _dataContext.Patients.Include("Polls").Where(y => y.Polls.Any(z => z.Name == x.Name && z.AssignedAt > from && z.AssignedAt < to)).Count();
-                statistic.PassedPollAmount = _dataContext.Patients.Include("Polls").Where(y => y.Polls.Any(z => z.Name == x.Name && z.IsPassed && z.AssignedAt > from && z.AssignedAt < to)).Count();
+                statistic.TotalPollAmount = _dataContext.Patients.Include("Polls").Include("Doctors").Where(y => y.Doctors.Any(z => z.Id == doctorId) && y.Polls.Any(z => z.Name == x.Name && z.AssignedAt > from && z.AssignedAt < to)).Count();
+                statistic.PassedPollAmount = _dataContext.Patients.Include("Polls").Include("Doctors").Where(y => y.Doctors.Any(z => z.Id == doctorId) && y.Polls.Any(z => z.Name == x.Name && z.IsPassed && z.AssignedAt > from && z.AssignedAt < to)).Count();
                 statistic.NotPassedPollAmount = statistic.TotalPollAmount - statistic.PassedPollAmount;
             });
 
