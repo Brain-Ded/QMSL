@@ -177,11 +177,6 @@ namespace QMSL.Controllers
                 return BadRequest("Wrong poll/answers");
             }
 
-            if(poll.IsPassed)
-            {
-                return Ok("Poll is already passed");
-            }
-
             for(int i = 0; i < poll.Questions.Count; ++i)
             {
                 poll.Questions[i].ChoosenAnswer = choosenAnswers[i];
