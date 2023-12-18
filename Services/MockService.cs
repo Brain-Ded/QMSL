@@ -21,6 +21,7 @@ namespace QMSL.Services
                     Email = "patient@gmail.com",
                     Password = Convert.FromBase64String("gweijPaRKick7k1VbG0zxrUr5NX92ImLokyp4WD1Yp2r2pZfLUINTjVdBIs8lDt/uS2jXBvnQdikhB3aNcYApg=="),
                     PhoneNumber = "+3805452432",
+                    Doctors = new List<Doctor>()
                 },
                 new Patient()
                 {
@@ -34,7 +35,7 @@ namespace QMSL.Services
                     Email = "patient2@gmail.com",
                     Password = Convert.FromBase64String("gweijPaRKick7k1VbG0zxrUr5NX92ImLokyp4WD1Yp2r2pZfLUINTjVdBIs8lDt/uS2jXBvnQdikhB3aNcYApg=="),
                     PhoneNumber = "+380532447732",
-                    
+                    Doctors = new List<Doctor>()
                 },
             };
         }
