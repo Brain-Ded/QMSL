@@ -111,6 +111,7 @@ namespace QMSL.Controllers
                 return BadRequest("Doctor with this email does not exist");
             }
 
+
             Patient patient = await _dataContext.Patients.FirstAsync(x => x.Email.Equals(poll.patientEmail));
 
             if (patient == null)

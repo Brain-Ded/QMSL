@@ -170,7 +170,7 @@ namespace QMSL.Controllers
                 return BadRequest("Poll with this id is not exists");
             }
 
-            var poll = _dataContext.EditablePolls.First(x => x.Id == pollId);
+            var poll = _dataContext.EditablePolls.Include(y=> y.Questions).ThenInclude(z=>z.EditableAnswers).First(x => x.Id == pollId);
 
             if(poll.Questions.Count != choosenAnswers.Count)
             {
