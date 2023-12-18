@@ -163,7 +163,7 @@ namespace QMSL.Controllers
         }
 
         [HttpPost("Pass Poll")]
-        public async Task<ActionResult<string>> PassPoll(int pollId)
+        public async Task<ActionResult<string>> PassPoll(int pollId, List<int> choosenAnswers)
         {
             if(!await _dataContext.EditablePolls.AnyAsync(x => x.Id == pollId))
             {
@@ -172,9 +172,19 @@ namespace QMSL.Controllers
 
             var poll = _dataContext.EditablePolls.First(x => x.Id == pollId);
 
+            if(poll.Questions.Count != choosenAnswers.Count)
+            {
+                return BadRequest("Wrong poll/answers");
+            }
+
             if(poll.IsPassed)
             {
                 return Ok("Poll is already passed");
+            }
+
+            for(int i = 0; i < poll.Questions.Count; ++i)
+            {
+                poll.Questions[i].ChoosenAnswer = choosenAnswers[i];
             }
 
             _pollsService.PassPoll(poll);
