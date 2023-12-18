@@ -5,7 +5,6 @@ namespace QMSL.Services
 {
     public class PollsService
     {
-        //Vlad
         public GeneralPoll CreatePoll(string name, List<GeneralQuestion> questions)
         {
             if (!string.IsNullOrEmpty(name) && questions?.Count > 0)
@@ -13,12 +12,10 @@ namespace QMSL.Services
 
             throw new ArgumentNullException();
         }
-        //Vlad
         public GeneralPoll EditPoll(int id, GeneralPoll edited)
         {
             throw new NotImplementedException();
         }
-        //Nazar
         public Patient AssignPoll(Patient patient, EditablePoll poll) 
         {
             if(patient == null || poll == null)
@@ -30,7 +27,6 @@ namespace QMSL.Services
             patient.Polls.Add(poll);
             return patient;
         }
-        //Nazar
         public Patient UnassignPoll(Patient patient, int pollId) 
         {
             if (patient == null || patient.Polls == null)
@@ -49,7 +45,6 @@ namespace QMSL.Services
 
             return patient;
         }
-        //Nazar
         public EditablePoll CommentPoll(EditablePoll poll, Comment comment) 
         { 
             if(poll == null || comment == null)
@@ -66,12 +61,7 @@ namespace QMSL.Services
             comment.CommentedAt = DateTime.Now;
 
             return poll;
-        }
-        //Vlad
-        public EditablePoll GetEditCopy(int PollId) { throw new NotImplementedException(); }
-        //Vlad
-        public EditableQuestion GetEditQuestion(int QuestionId) { throw new NotImplementedException(); }
-        //Nazar
+        }  
         public EditablePoll PassPoll(EditablePoll poll) 
         {
             if (poll == null) throw new ArgumentNullException();

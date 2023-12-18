@@ -25,16 +25,6 @@ namespace QMSL_UTestPolls
             Assert.IsNotNull(test);
         }
         [Test]
-        public void GetEditCopy_NegativeTest()
-        {
-            
-            int invalidPollId = -1; 
-            Assert.Throws<NotImplementedException>(() =>
-            {
-                var result = pollInstance.GetEditCopy(invalidPollId);
-            });
-        }
-        [Test]
         [TestCase(1)]
         public void GetEditQuestion_PositiveTest(int id)
         {
@@ -46,17 +36,6 @@ namespace QMSL_UTestPolls
             };
             var test = question.getEditCopy();
             Assert.IsNotNull(test);
-        }
-
-        [Test]
-        public void GetEditQuestion_NegativeTest()
-        {
-            
-            int invalidQuestionId = -1; 
-            Assert.Throws<NotImplementedException>(() =>
-            {
-                var result = pollInstance.GetEditQuestion(invalidQuestionId);
-            });
         }
         public void PassPoll_PositiveTest()
         {
