@@ -189,7 +189,7 @@ namespace QMSL_UTestGeneral
             StatisticController controller = new StatisticController(testMockDb.Object, null);
 
             var stats = controller.GetDoctorStatistic(id);
-            ;
+
             Assert.IsTrue(stats.Result.Result is OkObjectResult);
 
         }
